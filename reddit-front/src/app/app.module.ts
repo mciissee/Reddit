@@ -6,6 +6,7 @@ import { registerLocaleData } from '@angular/common';
 import { fr_FR } from 'ng-zorro-antd/i18n';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 
+import { CoreModule } from './core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,8 @@ registerLocaleData(fr);
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+
+    CoreModule,
 
     AppRoutingModule,
   ],
