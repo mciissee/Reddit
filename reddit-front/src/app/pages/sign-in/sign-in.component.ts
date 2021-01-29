@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { AuthService, User } from 'src/app/core';
+import { AuthService, User } from '@reddit/core';
 
 @Component({
   selector: 'app-sign-in',

@@ -1,0 +1,17 @@
+.avatar {
+  display: inline-flex;
+  align-items: center;
+
+  nz-avatar {
+    margin-left: 8px;
+  }
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 32px;
+    padding-right: 8px;
+  }
+}
