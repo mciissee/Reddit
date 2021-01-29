@@ -69,17 +69,15 @@ export class AuthService {
     signOut(): Promise<boolean> {
         this.user = undefined;
         this.authTokenService.delete();
-        return this.router.navigateByUrl('/login', { replaceUrl: true });
+        return this.router.navigateByUrl('/sign-in', { replaceUrl: true });
     }
 
-    signIn(args: SignInArgs): Observable<SignInResponse> {
-        return this.http.post<SignInResponse>(this.url('sign-in'), args, {
+    async signIn(args: SignInArgs): Promise<User | undefined> {
+        const response = await this.http.post<SignInResponse>(this.url('sign-in'), args, {
             headers: JSON_CONTENT
-        }).pipe(
-            tap((response) => {
-                this.authTokenService.save(response.token, args.username);
-            })
-        );
+        }).toPromise();
+        this.authTokenService.save(response.token, args.username);
+        return this.ready();
     }
 
     signUp(args: SignUpArgs): Observable<void> {
