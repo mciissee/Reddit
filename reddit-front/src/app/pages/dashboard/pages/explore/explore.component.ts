@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService, User } from '@reddit/core';
 
 @Component({
   selector: 'app-explore',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExploreComponent implements OnInit {
 
-  constructor() { }
+    user?: User;
 
-  ngOnInit() {
-  }
+    constructor(
+        private readonly authService: AuthService
+    ) { }
+
+    async ngOnInit(): Promise<void> {
+        this.user = await this.authService.ready();
+    }
 
 }

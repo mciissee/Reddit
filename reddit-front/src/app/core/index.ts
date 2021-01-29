@@ -5,3 +5,4 @@ export * from './services/auth-token.service';
 export * from './services/auth.service';
 export * from './services/config.service';
 export * from './services/user.service';
+export * from './models/posts';

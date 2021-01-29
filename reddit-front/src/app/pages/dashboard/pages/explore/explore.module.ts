@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 
+import { DashboardSharedModule } from '../../shared/shared.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -13,8 +15,9 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     ]),
 
     MatCardModule,
-
     NzButtonModule,
+
+    DashboardSharedModule,
   ],
   declarations: [ExploreComponent]
 })
