@@ -4,8 +4,6 @@ import fr.uge.jee.reddit.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;

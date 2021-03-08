@@ -47,8 +47,7 @@ public class Topic {
     )
     private List<Comment> commentList;
 
-    public Topic(int id, @NotBlank @Size(max = 144) String title, @NotBlank @Size(max = 144) String content, @NotBlank User author, int upvote, int downvote, Date date, int hotness, List<Comment> commentList) {
-        this.id = id;
+    public Topic(@NotBlank @Size(max = 144) String title, @NotBlank @Size(max = 144) String content, @NotBlank User author, int upvote, int downvote, int hotness, Date date, List<Comment> commentList) {
         this.title = title;
         this.content = content;
         this.author = author;
