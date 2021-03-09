@@ -6,10 +6,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class TopicCreateRequest {
-    @Schema(description = "ID of the author.", required = true)
-    @NotBlank
-    private String username;
-
     @Schema(description = "Title of the topic.", required = true)
     @Size(max = 144)
     private String Title;
@@ -19,14 +15,6 @@ public class TopicCreateRequest {
     private String Content;
 
     public TopicCreateRequest() {
-    }
-
-    public @NotBlank String getUsername() {
-        return username;
-    }
-
-    public void setUsername(@NotBlank String username) {
-        this.username = username;
     }
 
     public String getTitle() {
