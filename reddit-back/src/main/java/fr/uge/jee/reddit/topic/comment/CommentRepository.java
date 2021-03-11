@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.topic;
+package fr.uge.jee.reddit.topic.comment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

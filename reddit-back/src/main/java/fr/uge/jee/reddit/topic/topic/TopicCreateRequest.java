@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.topic;
+package fr.uge.jee.reddit.topic.topic;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

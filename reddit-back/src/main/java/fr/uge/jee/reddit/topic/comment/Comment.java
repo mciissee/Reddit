@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.topic;
+package fr.uge.jee.reddit.topic.comment;
 
 import fr.uge.jee.reddit.user.User;
 

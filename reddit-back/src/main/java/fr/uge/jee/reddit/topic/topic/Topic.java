@@ -1,5 +1,6 @@
-package fr.uge.jee.reddit.topic;
+package fr.uge.jee.reddit.topic.topic;
 
+import fr.uge.jee.reddit.topic.comment.Comment;
 import fr.uge.jee.reddit.user.User;
 
 import javax.persistence.*;
@@ -13,7 +14,7 @@ import java.util.List;
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column
     @NotBlank
@@ -29,15 +30,19 @@ public class Topic {
     @ManyToOne
     private User author;
 
+    @NotBlank
     @Column
     private int upvote;
 
+    @NotBlank
     @Column
     private int downvote;
 
+    @NotBlank
     @Column
     private Date date;
 
+    @NotBlank
     @Column
     private int hotness;
 
@@ -85,11 +90,11 @@ public class Topic {
         this.hotness = hotness;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

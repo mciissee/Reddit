@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.topic;
+package fr.uge.jee.reddit.topic.comment;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

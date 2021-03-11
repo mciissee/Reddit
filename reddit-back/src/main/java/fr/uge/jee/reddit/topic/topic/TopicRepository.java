@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.topic;
+package fr.uge.jee.reddit.topic.topic;
 
 import fr.uge.jee.reddit.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
