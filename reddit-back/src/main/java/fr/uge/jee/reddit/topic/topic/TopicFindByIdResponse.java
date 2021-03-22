@@ -51,9 +51,9 @@ public class TopicFindByIdResponse {
         this.title = topic.getTitle();
         this.content = topic.getContent();
         this.author = topic.getAuthor().getUsername();
-        this.upvote = topic.getUpvote();
-        this.downvote = topic.getDownvote();
-        this.hotness = topic.getHotness();
+        this.upvote = topic.getLike().getUpvotes();
+        this.downvote = topic.getLike().getDownvotes();
+        this.hotness = topic.getLike().getHotness();
         this.date = topic.getDate();
         if(topic.getCommentList() == null)
             this.commentList = new ArrayList<>();

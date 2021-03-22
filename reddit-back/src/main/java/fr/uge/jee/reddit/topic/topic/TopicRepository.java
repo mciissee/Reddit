@@ -11,11 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long> {
-    List<Topic> findAllByAuthorOrderByHotness(User Author);
+    List<Topic> findAllByOrderByLikeDesc();
 
-    List<Topic> findAllByContentContainingOrderByHotness(String content);
-
-    List<Topic> findAllByDateIsLessThanEqualOrderByHotness(Date date);
+    List<Topic> findAllByAuthorOrderByLikeDesc(User author);
 
     Optional<Topic> findById(long id);
 

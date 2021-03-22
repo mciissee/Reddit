@@ -1,6 +1,8 @@
 package fr.uge.jee.reddit.topic.topic;
 
 import fr.uge.jee.reddit.auth.AuthErrorResponse;
+import fr.uge.jee.reddit.topic.comment.Comment;
+import fr.uge.jee.reddit.topic.like.Like;
 import fr.uge.jee.reddit.user.User;
 import fr.uge.jee.reddit.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @RestController
@@ -66,11 +69,9 @@ public class TopicController {
                     request.getTitle(),
                     request.getContent(),
                     user,
-                    0,
-                    0,
-                    0,
                     new Date(System.currentTimeMillis()),
-                    null
+                    new Like(0, 0, 0, new ArrayList<>(), new ArrayList<>()),
+                    new ArrayList<>()
                 )
             );
             return ResponseEntity.ok(new TopicCreateResponse(topic.getId()));

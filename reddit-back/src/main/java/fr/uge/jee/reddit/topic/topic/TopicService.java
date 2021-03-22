@@ -15,11 +15,9 @@ public class TopicService {
 
     public Topic save(Topic topic){return topicRepository.save(topic);}
 
-    public List<Topic> findAllByAuthorOrderByHotness(User Author){return topicRepository.findAllByAuthorOrderByHotness(Author);}
+    public List<Topic> findAllByAuthorOrderByLikeDesc(User Author){return topicRepository.findAllByAuthorOrderByLikeDesc(Author);}
 
-    public List<Topic> findAllByContentContainingOrderByHotness(String content){return topicRepository.findAllByContentContainingOrderByHotness(content);}
-
-    public List<Topic> findAllByDateIsLessThanEqualOrderByHotness(Date date){return topicRepository.findAllByDateIsLessThanEqualOrderByHotness(date);}
+    public List<Topic> findAllByOrderByLikeDesc(){return topicRepository.findAllByOrderByLikeDesc();}
 
     public Optional<Topic> findById(long id){return topicRepository.findById(id);}
 }

@@ -1,6 +1,7 @@
 package fr.uge.jee.reddit.topic.topic;
 
 import fr.uge.jee.reddit.topic.comment.Comment;
+import fr.uge.jee.reddit.topic.like.Like;
 import fr.uge.jee.reddit.user.User;
 
 import javax.persistence.*;
@@ -32,19 +33,11 @@ public class Topic {
 
     @NotBlank
     @Column
-    private int upvote;
-
-    @NotBlank
-    @Column
-    private int downvote;
-
-    @NotBlank
-    @Column
     private Date date;
 
+    @OneToOne
     @NotBlank
-    @Column
-    private int hotness;
+    private Like like;
 
     @OneToMany(
             cascade = CascadeType.ALL,
@@ -52,18 +45,24 @@ public class Topic {
     )
     private List<Comment> commentList;
 
-    public Topic(@NotBlank @Size(max = 144) String title, @NotBlank @Size(max = 144) String content, @NotBlank User author, int upvote, int downvote, int hotness, Date date, List<Comment> commentList) {
+    public Topic(@NotBlank @Size(max = 144) String title, @NotBlank @Size(max = 144) String content, @NotBlank User author, @NotBlank Date date, @NotBlank Like like, List<Comment> commentList) {
         this.title = title;
         this.content = content;
         this.author = author;
-        this.upvote = upvote;
-        this.downvote = downvote;
         this.date = date;
-        this.hotness = hotness;
+        this.like = like;
         this.commentList = commentList;
     }
 
     public Topic() {
+    }
+
+    public Like getLike() {
+        return like;
+    }
+
+    public void setLike(Like like) {
+        this.like = like;
     }
 
     public List<Comment> getCommentList() {
@@ -80,14 +79,6 @@ public class Topic {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public int getHotness() {
-        return hotness;
-    }
-
-    public void setHotness(int hotness) {
-        this.hotness = hotness;
     }
 
     public long getId() {
@@ -122,22 +113,6 @@ public class Topic {
         this.author = author;
     }
 
-    public int getUpvote() {
-        return upvote;
-    }
-
-    public void setUpvote(int upvote) {
-        this.upvote = upvote;
-    }
-
-    public int getDownvote() {
-        return downvote;
-    }
-
-    public void setDownvote(int downvote) {
-        this.downvote = downvote;
-    }
-
     @Override
     public String toString() {
         return "Topic{" +
@@ -145,10 +120,8 @@ public class Topic {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", author=" + author +
-                ", upvote=" + upvote +
-                ", downvote=" + downvote +
                 ", date=" + date +
-                ", hotness=" + hotness +
+                ", like=" + like +
                 ", commentList=" + commentList +
                 '}';
     }
