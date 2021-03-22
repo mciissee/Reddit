@@ -3,6 +3,7 @@ package fr.uge.jee.reddit.topic.topic;
 import fr.uge.jee.reddit.auth.AuthErrorResponse;
 import fr.uge.jee.reddit.topic.comment.Comment;
 import fr.uge.jee.reddit.topic.like.Like;
+import fr.uge.jee.reddit.topic.like.LikeController;
 import fr.uge.jee.reddit.user.User;
 import fr.uge.jee.reddit.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -34,6 +36,9 @@ public class TopicController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LikeController likeController;
 
     private Optional<User> currentUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -70,7 +75,7 @@ public class TopicController {
                     request.getContent(),
                     user,
                     new Date(System.currentTimeMillis()),
-                    new Like(0, 0, 0, new ArrayList<>(), new ArrayList<>()),
+                        likeController.createLike(),
                     new ArrayList<>()
                 )
             );
@@ -104,5 +109,9 @@ public class TopicController {
                     .status(HttpStatus.NOT_FOUND)
                     .body(new TopicErrorResponse("topic/not-found","topic not found"));
         return ResponseEntity.ok(new TopicFindByIdResponse(topic.get()));
+    }
+
+    public List<Topic> findAllTopicsOrderedByLikeDesc(){
+        return topicService.findAllByOrderByLikeDesc();
     }
 }

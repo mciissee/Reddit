@@ -17,6 +17,7 @@ public class LikeController {
     @Autowired
     private UserService userService;
 
+    @Autowired
     private LikeService likeService;
 
     private Optional<User> currentUser(){
