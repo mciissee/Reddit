@@ -1,0 +1,44 @@
+<nz-page-header>
+  <nz-page-header-title>
+    <div class="title">
+      <i nz-icon nzType="reddit-circle" nzTheme="fill"></i>
+      Reddit
+    </div>
+  </nz-page-header-title>
+  <nz-page-header-tags>
+    <ng-container *ngFor='let link of links'>
+      <ng-container *ngIf="link.visible()">
+        <a
+          nz-button [nzType]="rla.isActive ? 'link' : 'text'"
+          [routerLink]="link.href" routerLinkActive #rla="routerLinkActive">
+          <i nz-icon [nzType]="link.icon"></i>
+          {{link.title}}
+        </a>
+      </ng-container>
+    </ng-container>
+  </nz-page-header-tags>
+  <nz-page-header-extra>
+    <ng-container *ngIf="user; else: notLogged">
+      <button class="avatar" nz-button nzType="text" nzShape="round" nz-popover [nzPopoverContent]="content">
+        {{user!.username|uppercase}}
+        <nz-avatar nzSize="default" nzIcon="user"></nz-avatar>
+        <ng-template #content>
+          <button (click)="signOut()" nz-button nzType="default" nzShape="round">
+            <i nz-icon nzType="logout"></i>
+            Deconnexion
+          </button>
+        </ng-template>
+      </button>
+    </ng-container>
+    <ng-template #notLogged>
+      <button nz-button nzType="default" nzShape="round" [routerLink]="'/sign-in'">
+        <i nz-icon nzType="login"></i>
+        Connexion
+      </button>
+      <button nz-button nzType="primary" nzShape="round" [routerLink]="'/sign-up'">
+        <i nz-icon nzType="user-add"></i>
+        Inscription
+      </button>
+    </ng-template>
+  </nz-page-header-extra>
+</nz-page-header>
