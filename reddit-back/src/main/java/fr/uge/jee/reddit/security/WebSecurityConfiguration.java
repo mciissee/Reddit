@@ -61,7 +61,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**", "/static/**");
+        web.ignoring().antMatchers("/resources/**", "/static/**", "/h2-console/**");
     }
 
     @Override
