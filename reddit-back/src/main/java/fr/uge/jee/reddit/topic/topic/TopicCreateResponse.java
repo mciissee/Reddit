@@ -11,6 +11,7 @@ public class TopicCreateResponse {
     private long id;
 
     public TopicCreateResponse(long id) {
+        this.id = id;
     }
 
     public TopicCreateResponse() {
