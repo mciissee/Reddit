@@ -1,6 +1,8 @@
 package fr.uge.jee.reddit.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Objects;
@@ -8,6 +10,8 @@ import java.util.Objects;
 /**
  *  Representation of the sign in request response object.
  */
+@Getter
+@Setter
 public class AuthSignInResponse {
 
     @NotBlank
@@ -18,13 +22,5 @@ public class AuthSignInResponse {
 
     public AuthSignInResponse(String token) {
         this.token = Objects.requireNonNull(token);
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 }
