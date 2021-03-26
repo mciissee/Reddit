@@ -8,6 +8,13 @@ public class UserDTO {
 
     public UserDTO() {}
 
+    public UserDTO(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.role = user.getRole();
+    }
+
     public long getId() {
         return id;
     }

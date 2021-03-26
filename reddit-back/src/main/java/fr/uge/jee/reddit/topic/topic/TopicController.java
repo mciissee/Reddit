@@ -3,7 +3,7 @@ package fr.uge.jee.reddit.topic.topic;
 import fr.uge.jee.reddit.auth.AuthErrorResponse;
 import fr.uge.jee.reddit.topic.comment.Comment;
 import fr.uge.jee.reddit.topic.like.Like;
-import fr.uge.jee.reddit.topic.like.LikeController;
+import fr.uge.jee.reddit.topic.like.LikeService;
 import fr.uge.jee.reddit.user.User;
 import fr.uge.jee.reddit.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -41,7 +40,7 @@ public class TopicController {
     private UserService userService;
 
     @Autowired
-    private LikeController likeController;
+    private LikeService likeService;
 
     private Optional<User> currentUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -67,20 +66,22 @@ public class TopicController {
                     content = @Content(schema = @Schema(implementation = TopicErrorResponse.class))
             )
     })
-    @PostMapping(value = "/create-topic", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createTopic(@Valid @RequestBody TopicCreateRequest request){
         var opt = currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
-            var topic = topicService.save(
-                new Topic(
+            var topic =                 new Topic(
                     request.getTitle(),
                     request.getContent(),
                     user,
                     new Date(System.currentTimeMillis()),
-                        likeController.createLike(),
+                    likeService.save(new Like(0, 0, 0, new ArrayList<>(), new ArrayList<>())),
                     new ArrayList<>()
-                )
+            );
+            this.likeup(topic);
+            topic = topicService.save(
+                topic
             );
             return ResponseEntity.ok(new TopicCreateResponse(topic.getId()));
         }
@@ -92,26 +93,84 @@ public class TopicController {
     }
 
     @Operation(summary = "find a topic by his id.", tags = { "topics" })
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Successful operation",
-                    content = @Content(schema = @Schema(implementation = TopicFindByIdResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "topic not found",
-                    content = @Content(schema = @Schema(implementation = TopicErrorResponse.class))
-            )
-    })
-    @PostMapping(value = "/findTopicById", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> findById(@Valid @RequestBody TopicFindByIdRequest request){
-        var topic = topicService.findById(request.getId());
+    @GetMapping(value = "/{id}", produces = "application/json")
+    public ResponseEntity<?> findById(@PathVariable(name="id") long id){
+        var topic = topicService.findById(id);
         if(topic.isEmpty())
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new TopicErrorResponse("topic/not-found","topic not found"));
         return ResponseEntity.ok(new TopicFindByIdResponse(topic.get()));
+    }
+
+    @Operation(summary = "find a topic by his id and return the comments of the topics.", tags = { "topics" })
+    @GetMapping(value = "/{id}/comment/", produces = "application/json")
+    public ResponseEntity<?> findById_comments(@PathVariable(name="id") long id){
+        var topic = topicService.findById(id);
+        if(topic.isEmpty())
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new TopicErrorResponse("topic/not-found","topic not found"));
+        return ResponseEntity.ok(topic.get().getCommentList());
+    }
+
+    @Operation(summary = "find a topic by his id and return a specified comment in the comments of the topic.", tags = { "topics" })
+    @GetMapping(value = "/{id}/comment/{commentId}", produces = "application/json")
+    public ResponseEntity<?> findById_commentId(@PathVariable(name="id") long id, @PathVariable(name="commentId") long commentId){
+        var topic = topicService.findById(id);
+        if(topic.isEmpty())
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new TopicErrorResponse("topic/not-found","topic not found"));
+        Comment comment = new Comment();
+        comment.setId(commentId);
+        int i = topic.get().getCommentList().indexOf(comment);
+        if(i == -1)
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new TopicErrorResponse("comment/not-found","comment not found"));
+
+        return ResponseEntity.ok(comment);
+    }
+
+    @Operation(summary = "find a topic by his id and return the like of the topic.", tags = { "topics" })
+    @GetMapping(value = "/{id}/like/", produces = "application/json")
+    public ResponseEntity<?> findById_like(@PathVariable(name="id") long id){
+        var topic = topicService.findById(id);
+        if(topic.isEmpty())
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new TopicErrorResponse("topic/not-found","topic not found"));
+        return ResponseEntity.ok(topic.get().getLike());
+    }
+
+    @Operation(summary = "find a topic by his id and return the like of a specified comment.", tags = { "topics" })
+    @GetMapping(value = "/{id}/comment/{commentId}/like/", produces = "application/json")
+    public ResponseEntity<?> findById_commentId_like(@PathVariable(name="id") long id, @PathVariable(name="commentId") long commentId){
+        var topic = topicService.findById(id);
+        if(topic.isEmpty())
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new TopicErrorResponse("topic/not-found","topic not found"));
+        Comment comment = new Comment();
+        comment.setId(commentId);
+        int i = topic.get().getCommentList().indexOf(comment);
+        if(i == -1)
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(new TopicErrorResponse("comment/not-found","comment not found"));
+
+        return ResponseEntity.ok(comment.getLike());
+    }
+
+    public void likeup(Topic topic){
+        var opt = currentUser();
+        if (opt.isPresent()) {
+            User user = opt.get();
+            topic.getLike().getUpusers().add(user);
+            topic.getLike().setUpvotes(1);
+            topic.getLike().setHotness(1);
+        }
     }
 
     public Page<Topic> findAllTopicsOrderedByLikeDesc(Pageable pageable){

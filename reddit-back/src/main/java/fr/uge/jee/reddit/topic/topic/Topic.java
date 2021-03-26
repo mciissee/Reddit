@@ -3,6 +3,7 @@ package fr.uge.jee.reddit.topic.topic;
 import fr.uge.jee.reddit.topic.comment.Comment;
 import fr.uge.jee.reddit.topic.like.Like;
 import fr.uge.jee.reddit.user.User;
+import fr.uge.jee.reddit.user.UserDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -105,8 +106,8 @@ public class Topic {
         this.content = content;
     }
 
-    public User getAuthor() {
-        return author;
+    public UserDTO getAuthor() {
+        return new UserDTO(author);
     }
 
     public void setAuthor(User author) {
