@@ -1,9 +1,12 @@
 package fr.uge.jee.reddit.topic.topic;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-
+@Getter
+@Setter
 public class TopicErrorResponse {
 
     @NotBlank
@@ -26,19 +29,4 @@ public class TopicErrorResponse {
         this.message = message;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

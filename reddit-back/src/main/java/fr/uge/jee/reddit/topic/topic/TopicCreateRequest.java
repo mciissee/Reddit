@@ -1,10 +1,13 @@
 package fr.uge.jee.reddit.topic.topic;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
+@Getter
+@Setter
 public class TopicCreateRequest {
     @Schema(description = "Title of the topic.", required = true)
     @Size(max = 144)
@@ -17,19 +20,4 @@ public class TopicCreateRequest {
     public TopicCreateRequest() {
     }
 
-    public String getTitle() {
-        return Title;
-    }
-
-    public void setTitle(String title) {
-        Title = title;
-    }
-
-    public String getContent() {
-        return Content;
-    }
-
-    public void setContent(String content) {
-        Content = content;
-    }
 }

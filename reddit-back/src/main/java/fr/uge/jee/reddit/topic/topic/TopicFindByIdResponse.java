@@ -2,13 +2,16 @@ package fr.uge.jee.reddit.topic.topic;
 
 import fr.uge.jee.reddit.topic.comment.Comment;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Getter
+@Setter
 public class TopicFindByIdResponse {
 
     @NotBlank
@@ -61,75 +64,4 @@ public class TopicFindByIdResponse {
             this.commentList = topic.getCommentList().stream().map(Comment::getId).collect(Collectors.toList());
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public int getUpvote() {
-        return upvote;
-    }
-
-    public void setUpvote(int upvote) {
-        this.upvote = upvote;
-    }
-
-    public int getDownvote() {
-        return downvote;
-    }
-
-    public void setDownvote(int downvote) {
-        this.downvote = downvote;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public int getHotness() {
-        return hotness;
-    }
-
-    public void setHotness(int hotness) {
-        this.hotness = hotness;
-    }
-
-    public List<Long> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Long> commentList) {
-        this.commentList = commentList;
-    }
 }

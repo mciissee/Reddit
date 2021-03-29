@@ -28,6 +28,7 @@ import javax.validation.Valid;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -114,9 +115,7 @@ public class TopicController {
         return ResponseEntity.ok(new TopicFindByIdResponse(topic.get()));
     }
 
-    public Page<Topic> findAllTopicsOrderedByLikeDesc(Pageable pageable){
-        pageable = PageRequest.of(0,100);
-        Page<Topic> pageTopic = topicService.findAllByOrderByLikeDesc(pageable);
-        return pageTopic;
+    public ResponseEntity<?> findAllTopicsOrderedByLikeDesc(Pageable pageable){
+        return ResponseEntity.ok(topicService.findAllByOrderByLikeDesc(pageable));
     }
 }

@@ -4,6 +4,7 @@ import fr.uge.jee.reddit.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ public class TopicService {
         return topicRepository.saveAndFlush(topic);
     }
 
-    public List<Topic> findAllByAuthorOrderByLikeDesc(User Author){return topicRepository.findAllByAuthorOrderByLikeDesc(Author);}
+    public ResponseEntity<?> findAllByAuthorOrderByLikeDesc(User Author){return ResponseEntity.ok(topicRepository.findAllByAuthorOrderByLikeDesc(Author));}
 
     public Page<Topic> findAllByOrderByLikeDesc(Pageable pageable){return topicRepository.findAllByOrderByLikeDesc(pageable);}
 
