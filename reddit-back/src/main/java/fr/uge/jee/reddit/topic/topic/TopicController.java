@@ -71,17 +71,15 @@ public class TopicController {
         var opt = currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
-            var topic =                 new Topic(
-                    request.getTitle(),
-                    request.getContent(),
-                    user,
-                    new Date(System.currentTimeMillis()),
-                    likeService.save(new Like(0, 0, 0, new ArrayList<>(), new ArrayList<>())),
-                    new ArrayList<>()
-            );
-            this.likeup(topic);
-            topic = topicService.save(
-                topic
+            var topic = topicService.save(
+                    new Topic(
+                            request.getTitle(),
+                            request.getContent(),
+                            user,
+                            new Date(System.currentTimeMillis()),
+                            likeService.save(new Like(0, 0, 0, new ArrayList<>(), new ArrayList<>())),
+                            new ArrayList<>()
+                    )
             );
             return ResponseEntity.ok(new TopicCreateResponse(topic.getId()));
         }
@@ -100,22 +98,22 @@ public class TopicController {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new TopicErrorResponse("topic/not-found","topic not found"));
-        return ResponseEntity.ok(new TopicFindByIdResponse(topic.get()));
+        return ResponseEntity.ok(new TopicResponse(topic.get()));
     }
 
     @Operation(summary = "find a topic by his id and return the comments of the topics.", tags = { "topics" })
-    @GetMapping(value = "/{id}/comment/", produces = "application/json")
+    @GetMapping(value = "/{id}/comments", produces = "application/json")
     public ResponseEntity<?> findById_comments(@PathVariable(name="id") long id){
         var topic = topicService.findById(id);
         if(topic.isEmpty())
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(new TopicErrorResponse("topic/not-found","topic not found"));
-        return ResponseEntity.ok(topic.get().getCommentList());
+        return ResponseEntity.ok(new TopicResponse(topic.get()));
     }
 
     @Operation(summary = "find a topic by his id and return a specified comment in the comments of the topic.", tags = { "topics" })
-    @GetMapping(value = "/{id}/comment/{commentId}", produces = "application/json")
+    @GetMapping(value = "/{id}/comments/{commentId}", produces = "application/json")
     public ResponseEntity<?> findById_commentId(@PathVariable(name="id") long id, @PathVariable(name="commentId") long commentId){
         var topic = topicService.findById(id);
         if(topic.isEmpty())
@@ -134,7 +132,7 @@ public class TopicController {
     }
 
     @Operation(summary = "find a topic by his id and return the like of the topic.", tags = { "topics" })
-    @GetMapping(value = "/{id}/like/", produces = "application/json")
+    @GetMapping(value = "/{id}/like", produces = "application/json")
     public ResponseEntity<?> findById_like(@PathVariable(name="id") long id){
         var topic = topicService.findById(id);
         if(topic.isEmpty())
@@ -145,7 +143,7 @@ public class TopicController {
     }
 
     @Operation(summary = "find a topic by his id and return the like of a specified comment.", tags = { "topics" })
-    @GetMapping(value = "/{id}/comment/{commentId}/like/", produces = "application/json")
+    @GetMapping(value = "/{id}/comments/{commentId}/like", produces = "application/json")
     public ResponseEntity<?> findById_commentId_like(@PathVariable(name="id") long id, @PathVariable(name="commentId") long commentId){
         var topic = topicService.findById(id);
         if(topic.isEmpty())
@@ -163,14 +161,20 @@ public class TopicController {
         return ResponseEntity.ok(comment.getLike());
     }
 
-    public void likeup(Topic topic){
+    @Operation(summary = "find a topic by his id and return the like of a specified comment.", tags = { "topics" })
+    @PatchMapping(value = "/{id}/like-up", produces = "application/json")
+    public ResponseEntity<?> like(@PathVariable(name="id") long id){
         var opt = currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
-            topic.getLike().getUpusers().add(user);
-            topic.getLike().setUpvotes(1);
-            topic.getLike().setHotness(1);
+            var topic = topicService.findById(id);
+            if(topic.isEmpty())
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new TopicErrorResponse("topic/not-found","topic not found"));
+            return ResponseEntity.ok(topic.get().getLike().addLike(user));
         }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthErrorResponse("auth/unauthorized","User not connected."));
     }
 
     public Page<Topic> findAllTopicsOrderedByLikeDesc(Pageable pageable){
