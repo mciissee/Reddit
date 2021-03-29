@@ -23,7 +23,7 @@ public class TopicService {
 
     public ResponseEntity<?> findAllByAuthorOrderByLikeDesc(User Author){return ResponseEntity.ok(topicRepository.findAllByAuthorOrderByLikeDesc(Author));}
 
-    public Page<Topic> findAllByOrderByLikeDesc(Pageable pageable){return topicRepository.findAllByOrderByLikeDesc(pageable);}
+    public ResponseEntity<?> findAllByOrderByLikeDesc(Pageable pageable){return ResponseEntity.ok(topicRepository.findAllByOrderByLikeDesc(pageable));}
 
     public Optional<Topic> findById(long id){return topicRepository.findById(id);}
 }

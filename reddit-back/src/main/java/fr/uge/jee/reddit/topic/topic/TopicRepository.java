@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long>{
 
-    Page<Topic> findAllByOrderByLikeDesc(Pageable pageable);
+    ResponseEntity<?> findAllByOrderByLikeDesc(Pageable pageable);
 
     ResponseEntity<?> findAllByAuthorOrderByLikeDesc(User author);
 
