@@ -57,7 +57,7 @@ public class TopicController {
             @ApiResponse(
                     responseCode = "201",
                     description = "Successful operation",
-                    content = @Content(schema = @Schema(implementation = TopicCreateResponse.class))
+                    content = @Content(schema = @Schema(implementation = TopicResponse.class))
 
             ),
             @ApiResponse(
@@ -81,7 +81,7 @@ public class TopicController {
                             new ArrayList<>()
                     )
             );
-            return ResponseEntity.ok(new TopicCreateResponse(topic.getId()));
+            return ResponseEntity.ok(new TopicResponse(topic));
         }
         else {
             return ResponseEntity
@@ -128,7 +128,7 @@ public class TopicController {
                     .status(HttpStatus.NOT_FOUND)
                     .body(new TopicErrorResponse("comment/not-found","comment not found"));
 
-        return ResponseEntity.ok(comment);
+        return ResponseEntity.ok(topic.get().getCommentList().get(i));
     }
 
     @Operation(summary = "find a topic by his id and return the like of the topic.", tags = { "topics" })
@@ -158,7 +158,7 @@ public class TopicController {
                     .status(HttpStatus.NOT_FOUND)
                     .body(new TopicErrorResponse("comment/not-found","comment not found"));
 
-        return ResponseEntity.ok(comment.getLike());
+        return ResponseEntity.ok(topic.get().getCommentList().get(i).getLike());
     }
 
     @Operation(summary = "find a topic by his id and return the like of a specified comment.", tags = { "topics" })
@@ -173,6 +173,22 @@ public class TopicController {
                         .status(HttpStatus.NOT_FOUND)
                         .body(new TopicErrorResponse("topic/not-found","topic not found"));
             return ResponseEntity.ok(topic.get().getLike().addLike(user));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthErrorResponse("auth/unauthorized","User not connected."));
+    }
+
+    @Operation(summary = "find a topic by his id and return the like of a specified comment.", tags = { "topics" })
+    @PatchMapping(value = "/{id}/like-down", produces = "application/json")
+    public ResponseEntity<?> dislike(@PathVariable(name="id") long id){
+        var opt = currentUser();
+        if (opt.isPresent()) {
+            User user = opt.get();
+            var topic = topicService.findById(id);
+            if(topic.isEmpty())
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new TopicErrorResponse("topic/not-found","topic not found"));
+            return ResponseEntity.ok(topic.get().getLike().addDislike(user));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthErrorResponse("auth/unauthorized","User not connected."));
     }
