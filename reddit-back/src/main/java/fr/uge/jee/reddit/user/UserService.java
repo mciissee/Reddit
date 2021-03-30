@@ -35,16 +35,6 @@ public class UserService {
         return userRepo.findByUsername(username);
     }
 
-    public Optional<User> currentUser(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            UserDetails details = (UserDetails) auth.getPrincipal();
-            String userName = details.getUsername();
-            return findByUsername(userName);
-        }
-        return Optional.empty();
-    }
-
     public void updatePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepo.save(user);

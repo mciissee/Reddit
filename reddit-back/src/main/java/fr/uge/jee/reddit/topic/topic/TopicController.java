@@ -1,6 +1,7 @@
 package fr.uge.jee.reddit.topic.topic;
 
 import fr.uge.jee.reddit.auth.AuthErrorResponse;
+import fr.uge.jee.reddit.auth.AuthService;
 import fr.uge.jee.reddit.topic.comment.Comment;
 import fr.uge.jee.reddit.topic.like.Like;
 import fr.uge.jee.reddit.topic.like.LikeService;
@@ -35,20 +36,20 @@ public class TopicController {
     private TopicService topicService;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
     private LikeService likeService;
 
-    private Optional<User> currentUser(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            UserDetails details = (UserDetails) auth.getPrincipal();
-            String userName = details.getUsername();
-            return userService.findByUsername(userName);
-        }
-        return Optional.empty();
+
+    @GetMapping(value = "/")
+    public ResponseEntity<?> findAllTopicsOrderedByLikeDesc(Pageable pageable){
+        return ResponseEntity.ok(topicService.findAllByOrderByLikeDesc(pageable));
     }
+
 
     @Operation(summary = "create a topic.", tags = { "topics" })
     @ApiResponses(value = {
@@ -66,7 +67,7 @@ public class TopicController {
     })
     @PostMapping(value = "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createTopic(@Valid @RequestBody TopicCreateRequest request){
-        var opt = currentUser();
+        var opt = authService.currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
             var topic = topicService.save(
@@ -162,7 +163,7 @@ public class TopicController {
     @Operation(summary = "find a topic by his id and return the like of a specified comment.", tags = { "topics" })
     @PatchMapping(value = "/{id}/like-up", produces = "application/json")
     public ResponseEntity<?> like(@PathVariable(name="id") long id){
-        var opt = currentUser();
+        var opt = authService.currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
             var topic = topicService.findById(id);
@@ -181,7 +182,7 @@ public class TopicController {
     @Operation(summary = "find a topic by his id and return the like of a specified comment.", tags = { "topics" })
     @PatchMapping(value = "/{id}/like-down", produces = "application/json")
     public ResponseEntity<?> dislike(@PathVariable(name="id") long id){
-        var opt = currentUser();
+        var opt = authService.currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
             var topic = topicService.findById(id);
@@ -194,9 +195,5 @@ public class TopicController {
             return ResponseEntity.ok(topic.get());
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthErrorResponse("auth/unauthorized","User not connected."));
-    }
-
-    public ResponseEntity<?> findAllTopicsOrderedByLikeDesc(Pageable pageable){
-        return ResponseEntity.ok(topicService.findAllByOrderByLikeDesc(pageable));
     }
 }

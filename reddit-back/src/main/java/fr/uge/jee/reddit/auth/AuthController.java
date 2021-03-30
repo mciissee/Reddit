@@ -1,9 +1,7 @@
 package fr.uge.jee.reddit.auth;
 
 import fr.uge.jee.reddit.security.JwtUtils;
-import fr.uge.jee.reddit.user.User;
-import fr.uge.jee.reddit.user.UserRole;
-import fr.uge.jee.reddit.user.UserService;
+import fr.uge.jee.reddit.user.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,6 +34,8 @@ public class AuthController {
 
     @Autowired
     private JwtUtils jwtUtils;
+    @Autowired
+    private AuthService authService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -108,5 +108,37 @@ public class AuthController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "change the password of a user.", tags = { "users" })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Successful operation"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "author not found",
+                    content = @Content(schema = @Schema(implementation = UserErrorResponse.class))
+            )
+    })
+    @PostMapping(value = "/change-password", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody AuthResetPasswordRequest request){
+        var opt = authService.currentUser();
+        if (opt.isPresent()) {
+            User user = opt.get();
+            if(!userService.checkIfValidOldPassword(user, request.getOldPassword())){
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(new AuthErrorResponse("auth/unauthorized","old password is not correct"));
+            }
+            userService.updatePassword(user, request.getNewPassword());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        else {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new AuthErrorResponse("auth/unauthorized","user not connected"));
+        }
     }
 }

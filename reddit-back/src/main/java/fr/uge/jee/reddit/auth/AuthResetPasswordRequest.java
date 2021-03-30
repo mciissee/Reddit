@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.user;
+package fr.uge.jee.reddit.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class UserCreateRequest {
+public class AuthResetPasswordRequest {
 
     @NotBlank
     @Size(min = 6, max = 40)
@@ -21,5 +21,5 @@ public class UserCreateRequest {
     @Schema(description = "New password of the user to change.", required = true)
     private String newPassword;
 
-    public UserCreateRequest() {}
+    public AuthResetPasswordRequest() {}
 }

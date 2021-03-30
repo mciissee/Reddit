@@ -1,6 +1,7 @@
 package fr.uge.jee.reddit.topic.comment;
 
 import fr.uge.jee.reddit.auth.AuthErrorResponse;
+import fr.uge.jee.reddit.auth.AuthService;
 import fr.uge.jee.reddit.topic.like.Like;
 import fr.uge.jee.reddit.topic.like.LikeService;
 import fr.uge.jee.reddit.user.User;
@@ -28,24 +29,19 @@ public class CommentController {
     private CommentService commentService;
 
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
     private LikeService likeService;
 
-    private Optional<User> currentUser(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            UserDetails details = (UserDetails) auth.getPrincipal();
-            String userName = details.getUsername();
-            return userService.findByUsername(userName);
-        }
-        return Optional.empty();
-    }
+
     @Operation(summary = "create a comment.", tags = { "comments" })
     @PostMapping(value ="/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createComment(String content){
-        var opt = currentUser();
+        var opt = authService.currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
             var comment = commentService.save(
@@ -104,7 +100,7 @@ public class CommentController {
     @Operation(summary = "find a comment by his id and return the like of a specified comment.", tags = { "comments" })
     @PatchMapping(value = "/{id}/like-up", produces = "application/json")
     public ResponseEntity<?> like(@PathVariable(name="id") long id){
-        var opt = currentUser();
+        var opt = authService.currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
             var comment = commentService.findById(id);
@@ -120,7 +116,7 @@ public class CommentController {
     @Operation(summary = "find a comment by his id and return the like of a specified comment.", tags = { "comments" })
     @PatchMapping(value = "/{id}/like-down", produces = "application/json")
     public ResponseEntity<?> dislike(@PathVariable(name="id") long id){
-        var opt = currentUser();
+        var opt = authService.currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
             var comment = commentService.findById(id);
