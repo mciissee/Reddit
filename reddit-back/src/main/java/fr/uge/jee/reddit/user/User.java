@@ -1,11 +1,15 @@
 package fr.uge.jee.reddit.user;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
-
+@Getter
+@Setter
 @Entity
 @Table(name="users")
 public class User {
@@ -52,4 +56,6 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }
