@@ -97,8 +97,11 @@ public class Like {
 
     public boolean addLike(User user){
         if(!upusers.contains(user)) {
-            downusers.remove(user);
+            if(downusers.remove(user))
+                downvotes -= 1;
             upusers.add(user);
+            upvotes += 1;
+            hotness = upvotes - downvotes;
             return true;
         }
         return false;
@@ -109,12 +112,15 @@ public class Like {
     }
 
     public boolean addDislike(User user){
-        if(!downusers.contains(user)) {
-            upusers.remove(user);
-            downusers.add(user);
-            return true;
+        if (downusers.contains(user)) {
+            return false;
         }
-        return false;
+        if(upusers.remove(user))
+            upvotes -= 1;
+        downusers.add(user);
+        downvotes += 1;
+        hotness = upvotes - downvotes;
+        return true;
     }
 
     @Override

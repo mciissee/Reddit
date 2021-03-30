@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 @Getter
 @Setter
-public class TopicFindByIdResponse {
-
 public class TopicResponse {
 
     @NotBlank
