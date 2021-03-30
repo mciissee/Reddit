@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "votes")
+@Table(name = "votes", uniqueConstraints = {@UniqueConstraint(columnNames = {"USER_ID", "POST_ID"})})
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
