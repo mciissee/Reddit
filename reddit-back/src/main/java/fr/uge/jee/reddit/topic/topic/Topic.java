@@ -3,7 +3,8 @@ package fr.uge.jee.reddit.topic.topic;
 import fr.uge.jee.reddit.topic.comment.Comment;
 import fr.uge.jee.reddit.topic.like.Like;
 import fr.uge.jee.reddit.user.User;
-import fr.uge.jee.reddit.user.UserDTO;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +12,10 @@ import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "topics")
 public class Topic {
@@ -29,20 +34,21 @@ public class Topic {
     private String content;
 
     @NotBlank
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     private User author;
 
     @NotBlank
     @Column
     private Date date;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY)
     @NotBlank
     private Like like;
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = LAZY
     )
     private List<Comment> commentList;
 
@@ -56,62 +62,6 @@ public class Topic {
     }
 
     public Topic() {
-    }
-
-    public Like getLike() {
-        return like;
-    }
-
-    public void setLike(Like like) {
-        this.like = like;
-    }
-
-    public List<Comment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<Comment> commentList) {
-        this.commentList = commentList;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public UserDTO getAuthor() {
-        return new UserDTO(author);
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
     }
 
     @Override
