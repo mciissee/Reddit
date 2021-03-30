@@ -91,6 +91,38 @@ public class Like {
         this.downusers = downusers;
     }
 
+    public boolean removeLike(User user){
+        return upusers.remove(user);
+    }
+
+    public boolean addLike(User user){
+        if(!upusers.contains(user)) {
+            if(downusers.remove(user))
+                downvotes -= 1;
+            upusers.add(user);
+            upvotes += 1;
+            hotness = upvotes - downvotes;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeDislike(User user){
+        return downusers.remove(user);
+    }
+
+    public boolean addDislike(User user){
+        if (downusers.contains(user)) {
+            return false;
+        }
+        if(upusers.remove(user))
+            upvotes -= 1;
+        downusers.add(user);
+        downvotes += 1;
+        hotness = upvotes - downvotes;
+        return true;
+    }
+
     @Override
     public String toString() {
         return "Like{" +

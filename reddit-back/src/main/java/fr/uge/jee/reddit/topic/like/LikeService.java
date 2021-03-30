@@ -9,7 +9,7 @@ public class LikeService {
     @Autowired
     private LikeRepository likeRepository;
 
-    public Like save(Like like){return likeRepository.save(like);}
+    public Like save(Like like){return likeRepository.saveAndFlush(like);}
 
     public Boolean existsLikeByDownusersIsContaining(User user){ return likeRepository.existsLikeByDownusersIsContaining(user);}
 

@@ -1,12 +1,14 @@
 package fr.uge.jee.reddit.topic.comment;
 
+import fr.uge.jee.reddit.topic.like.Like;
 import fr.uge.jee.reddit.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "comments")
@@ -24,17 +26,11 @@ public class Comment {
     @Size(max = 144)
     private String response;
 
-    @Column
-    private int upVote;
-
-    @Column
-    private int downVote;
+    @OneToOne
+    Like like;
 
     @Column
     private Date date;
-
-    @Column
-    private int hotness;
 
     @OneToMany(
             cascade = CascadeType.ALL,
@@ -42,14 +38,11 @@ public class Comment {
     )
     private List<Comment> commentList;
 
-    public Comment(long id, @NotBlank User owner, @NotBlank @Size(max = 144) String response, int upVote, int downVote, Date date, int hotness, List<Comment> commentList) {
-        this.id = id;
+    public Comment(@NotBlank User owner, @NotBlank @Size(max = 144) String response, Like like, Date date, List<Comment> commentList) {
         this.owner = owner;
         this.response = response;
-        this.upVote = upVote;
-        this.downVote = downVote;
+        this.like = like;
         this.date = date;
-        this.hotness = hotness;
         this.commentList = commentList;
     }
 
@@ -62,14 +55,6 @@ public class Comment {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public int getHotness() {
-        return hotness;
-    }
-
-    public void setHotness(int hotness) {
-        this.hotness = hotness;
     }
 
     public long getId() {
@@ -92,48 +77,24 @@ public class Comment {
         this.commentList = commentList;
     }
 
-    public int getUpVote() {
-        return upVote;
-    }
-
-    public int getDownVote() {
-        return downVote;
-    }
-
     public String getResponse() {
         return response;
-    }
-
-    public void setUpVote(int upVote) {
-        this.upVote = upVote;
-    }
-
-    public void setDownVote(int downVote) {
-        this.downVote = downVote;
     }
 
     public void setResponse(String response) {
         this.response = response;
     }
 
-    public void incrementUpVote(){
-        this.upVote += 1;
-    }
-
-    public void decrementUpVote(){
-        this.upVote -= 1;
-    }
-
-    public void incrementDownVote(){
-        this.downVote += 1;
-    }
-
-    public void decrementDownVote(){
-        this.downVote -= 1;
-    }
-
     public User getOwner() {
         return owner;
+    }
+
+    public Like getLike() {
+        return like;
+    }
+
+    public void setLike(Like like) {
+        this.like = like;
     }
 
     @Override
@@ -142,11 +103,22 @@ public class Comment {
                 "id=" + id +
                 ", owner=" + owner +
                 ", response='" + response + '\'' +
-                ", upVote=" + upVote +
-                ", downVote=" + downVote +
+                ", like=" + like +
                 ", date=" + date +
-                ", hotness=" + hotness +
                 ", commentList=" + commentList +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return id == comment.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

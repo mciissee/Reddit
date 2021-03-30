@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 @Getter
 @Setter
-public class TopicFindByIdResponse {
+public class TopicResponse {
 
     @NotBlank
     @Schema(description = "id of the topic", required = true)
@@ -49,7 +49,7 @@ public class TopicFindByIdResponse {
     @Schema(description = "id of the comments of this topic", required = true)
     private List<Long> commentList;
 
-    public TopicFindByIdResponse(Topic topic) {
+    public TopicResponse(Topic topic) {
         this.id = topic.getId();
         this.title = topic.getTitle();
         this.content = topic.getContent();
