@@ -1,9 +1,31 @@
 package fr.uge.jee.reddit.user;
 
+import fr.uge.jee.reddit.auth.AuthErrorResponse;
+import fr.uge.jee.reddit.topic.topic.Topic;
+import fr.uge.jee.reddit.topic.topic.TopicCreateRequest;
+import fr.uge.jee.reddit.topic.topic.TopicCreateResponse;
+import fr.uge.jee.reddit.topic.topic.TopicErrorResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,6 +40,38 @@ public class UserController {
             return ResponseEntity.ok(userToDTO(user.get()));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @Operation(summary = "change the password of a user.", tags = { "users" })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Successful operation"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "author not found",
+                    content = @Content(schema = @Schema(implementation = UserErrorResponse.class))
+            )
+    })
+    @PostMapping(value = "/change-password", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody UserCreateRequest request){
+        var opt = userService.currentUser();
+        if (opt.isPresent()) {
+            User user = opt.get();
+            if(!userService.checkIfValidOldPassword(user, request.getOldPassword())){
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(new AuthErrorResponse("auth/unauthorized","old password is not correct"));
+            }
+            userService.updatePassword(user, request.getNewPassword());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        else {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new AuthErrorResponse("auth/unauthorized","user not connected"));
+        }
     }
 
     private UserDTO userToDTO(User user) {

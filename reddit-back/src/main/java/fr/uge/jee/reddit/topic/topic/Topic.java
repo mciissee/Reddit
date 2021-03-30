@@ -3,14 +3,16 @@ package fr.uge.jee.reddit.topic.topic;
 import fr.uge.jee.reddit.topic.comment.Comment;
 import fr.uge.jee.reddit.topic.like.Like;
 import fr.uge.jee.reddit.user.User;
-import fr.uge.jee.reddit.user.UserDTO;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.util.List;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "topics")
 public class Topic {
@@ -106,8 +108,8 @@ public class Topic {
         this.content = content;
     }
 
-    public UserDTO getAuthor() {
-        return new UserDTO(author);
+    public User getAuthor() {
+        return author;
     }
 
     public void setAuthor(User author) {

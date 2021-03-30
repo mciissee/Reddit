@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -193,9 +194,7 @@ public class TopicController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthErrorResponse("auth/unauthorized","User not connected."));
     }
 
-    public Page<Topic> findAllTopicsOrderedByLikeDesc(Pageable pageable){
-        pageable = PageRequest.of(0,100);
-        Page<Topic> pageTopic = topicService.findAllByOrderByLikeDesc(pageable);
-        return pageTopic;
+    public ResponseEntity<?> findAllTopicsOrderedByLikeDesc(Pageable pageable){
+        return ResponseEntity.ok(topicService.findAllByOrderByLikeDesc(pageable));
     }
 }

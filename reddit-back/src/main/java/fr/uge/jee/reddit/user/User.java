@@ -1,5 +1,8 @@
 package fr.uge.jee.reddit.user;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -8,6 +11,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name="users")
+@Getter
+@Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
