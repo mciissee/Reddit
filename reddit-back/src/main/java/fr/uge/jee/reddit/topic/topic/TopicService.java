@@ -20,7 +20,7 @@ public class TopicService {
 
     public Optional<Topic> findById(long id){return topicRepository.findById(id);}
 
-    public Object findAllByOrderByLikeDesc(Pageable pageable) {
+    public Page<Topic> findAllByOrderByLikeDesc(Pageable pageable) {
         return topicRepository.findAllByOrderByPostDesc(pageable);
     }
 }

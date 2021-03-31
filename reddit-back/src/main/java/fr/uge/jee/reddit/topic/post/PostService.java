@@ -18,8 +18,8 @@ public class PostService {
         return postRepository.findById(id);
     }
 
-    public Page<Post> findByAuthor_Username(String username) {
-        return postRepository.findByAuthor_Username(username);
+    public Page<Post> findByAuthor_Username(Pageable page, String username) {
+        return postRepository.findByAuthor_Username(page, username);
     }
 
     public Page<Post> findAllBy(Pageable pageable) {

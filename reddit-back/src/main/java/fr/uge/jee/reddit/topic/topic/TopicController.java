@@ -2,6 +2,7 @@ package fr.uge.jee.reddit.topic.topic;
 
 import fr.uge.jee.reddit.auth.AuthErrorResponse;
 import fr.uge.jee.reddit.auth.AuthService;
+import fr.uge.jee.reddit.topic.post.PostFactory;
 import fr.uge.jee.reddit.topic.vote.VoteService;
 import fr.uge.jee.reddit.topic.post.ErrorResponse;
 import fr.uge.jee.reddit.topic.post.Post;
@@ -74,14 +75,7 @@ public class TopicController {
         }
 
         User user = opt.get();
-        var post = postService.save(new Post(
-                request.getContent(),
-                user,
-                new Date(System.currentTimeMillis()),
-                0,
-                0,
-                new ArrayList<>()
-        ));
+        var post = postService.save(PostFactory.createPost(request.getContent(), user));
         var topic = topicService.save(
                 new Topic(
                         request.getTitle(),
