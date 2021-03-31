@@ -19,7 +19,7 @@ public class Comment {
     private long id;
 
     @NotBlank
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     private Post post;
 
     public Comment() {

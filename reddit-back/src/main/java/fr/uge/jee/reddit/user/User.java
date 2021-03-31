@@ -8,8 +8,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
-@Getter
-@Setter
 @Entity
 @Table(name="users")
 @Getter
@@ -58,6 +56,4 @@ public class User {
     public int hashCode() {
         return Objects.hash(id);
     }
-
-
 }

@@ -26,7 +26,8 @@ public class Topic {
 
     @OneToOne(
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     private Post post;
 
