@@ -16,10 +16,18 @@ import java.util.Optional;
 @Service
 @Transactional
 public class TopicService {
+
     @Autowired
     private TopicRepository topicRepository;
+
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private VoteService voteService;
+
+    @Autowired
+    private CommentService commentService;
 
     public Topic save(Topic topic){
         return topicRepository.saveAndFlush(topic);
@@ -32,17 +40,21 @@ public class TopicService {
     }
 
     @Transactional()
-    public void delete(long postId) {
-        var topic = topicRepository.findByPostId(postId).get();
+    public void delete(long id) {
+        var topic = topicRepository.findByPostId(id).get();
 
-        // TODO delete comments
+        //delete comments
+        var comments = commentService.findAllByParent(postService.findById(id).get());
+        comments.forEach(comment -> commentService.delete(comment.getPost().getId()));
 
-        // TODO delete votes
+        //delete votes
+        var votes = voteService.findAllOfPost(id);
+        votes.forEach(vote -> voteService.delete(vote.getId()));
 
-        // delete post
+        //delete post
         postService.delete(topic.getPost());
 
-        // delete comment
+        //delete comment
         topicRepository.delete(topic);
     }
 
@@ -55,4 +67,10 @@ public class TopicService {
     public Page<Topic> paginate(Pageable pageable) {
         return topicRepository.findAllByOrderByPostHotnessDesc(pageable);
     }
+
+    @Transactional(readOnly = true)
+    public Page<Topic> paginateAllOfAuthor(String username, Pageable pageable) {
+        return topicRepository.findAllByPostAuthorUsernameOrderByPostHotnessDesc(username, pageable);
+    }
+
 }

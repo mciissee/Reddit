@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Post, User } from '@reddit/core';
 
 @Component({
@@ -17,14 +17,25 @@ export class PostListComponent {
     @Input()
     parent?: Post;
 
-    trackById(_: number, item: Post) {
-        return item.id;
-    }
+    @Output()
+    postsChange = new EventEmitter<Post[]>();
 
-    sort() {
-        console.log('sorting');
+    onChange() {
         this.posts = this.posts.sort((a, b) => {
             return b.hotness - a.hotness;
         })
     }
+
+    onDelete(item: Post) {
+        this.posts = this.posts.filter(e => e.id !== item.id).sort((a, b) => {
+            return b.hotness - a.hotness;
+        });
+        this.postsChange.emit(this.posts);
+    }
+
+
+    trackById(_: number, item: Post) {
+        return item.id;
+    }
+
 }

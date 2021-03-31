@@ -58,7 +58,7 @@ public class TopicController {
     }
 
     @Operation(summary = "delete a topic.", tags = { "comments" })
-    @DeleteMapping(value ="/{postId}")
+    @DeleteMapping(value ="/{postId}/")
     public ResponseEntity<?> delete(@PathVariable("postId") long postId) {
         var maybeUser = authService.currentUser();
         if (maybeUser.isEmpty()) {
@@ -68,6 +68,10 @@ public class TopicController {
         if (!maybeUser.get().getRole().equals(UserRole.ADMIN)) {
             return RestErrorResponse.unauthorized("only admin users can delete topics");
         }
+
+        var maybeTopic = topicService.findById(postId);
+        if(maybeTopic.isEmpty())
+            return RestErrorResponse.notFound("topic not found");
 
         topicService.delete(postId);
         return ResponseEntity.status(HttpStatus.OK).body("deleted");
@@ -88,9 +92,35 @@ public class TopicController {
         );
     }
 
+
+    @Operation(summary = "paginate through topic collection created by a specific user", tags = { "topics" })
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successful operation",
+                    content = @Content(schema = @Schema(implementation = Page.class))
+            ),
+    })
+    @GetMapping(value = "/by-author/{username}")
+    public ResponseEntity<?> paginateAllOfAuthor(@PathVariable("username") String username, Pageable pageable) {
+        var maybeUser = authService.currentUser();
+        if (maybeUser.isEmpty()) {
+            return RestErrorResponse.unauthorized("user not connected");
+        }
+        var user = maybeUser.get();
+        if (!user.getUsername().equals(username)) {
+            return RestErrorResponse.unauthorized("operation not allowed");
+        }
+
+        return ResponseEntity.ok(
+            topicService.paginateAllOfAuthor(username, pageable).map(TopicDTO::new)
+        );
+    }
+
+
     @Operation(summary = "find a topic by its id.", tags = { "topics" })
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> findById(@PathVariable(name="id") long id){
+    public ResponseEntity<?> findById(@PathVariable(name="id") long id) {
         var topic = topicService.findById(id);
         if(topic.isEmpty()) {
             return RestErrorResponse.notFound("topic not found");

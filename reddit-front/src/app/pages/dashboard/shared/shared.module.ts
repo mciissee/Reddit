@@ -6,6 +6,7 @@ import { MatInputModule } from "@angular/material/input";
 import { NzAvatarModule } from "ng-zorro-antd/avatar";
 import { NzButtonModule } from "ng-zorro-antd/button";
 import { NzCommentModule } from "ng-zorro-antd/comment";
+import { NzEmptyModule } from "ng-zorro-antd/empty";
 import { NzIconModule } from "ng-zorro-antd/icon";
 import { NzMessageModule } from "ng-zorro-antd/message";
 import { NzModalModule } from "ng-zorro-antd/modal";
@@ -13,7 +14,6 @@ import { NzToolTipModule } from "ng-zorro-antd/tooltip";
 import { PostItemComponent } from "./post-item/post-item.component";
 import { PostListComponent } from "./post-list/post-list.component";
 
-//import { Modu } from '@angular/cdk/text-field'
 @NgModule({
     imports: [
         CommonModule,
@@ -23,6 +23,7 @@ import { PostListComponent } from "./post-list/post-list.component";
         MatInputModule,
         NzIconModule,
         NzAvatarModule,
+        NzEmptyModule,
         NzModalModule,
         NzCommentModule,
         NzToolTipModule,

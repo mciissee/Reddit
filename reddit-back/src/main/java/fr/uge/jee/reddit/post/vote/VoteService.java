@@ -30,6 +30,11 @@ public class VoteService {
     }
 
     @Transactional
+    public void delete(long id){
+        voteRepository.delete(voteRepository.findById(id).get());
+    }
+
+    @Transactional
     public void unvote(User user, Post post) {
         Vote vote;
         Optional<Vote> maybeVote = voteRepository.findByUserUsernameAndPostId(
@@ -87,7 +92,7 @@ public class VoteService {
         );
         if (maybeVote.isEmpty()) {
             vote = save(new Vote(post, user, VoteTypes.DOWN_VOTE));
-            post.setUpvotes(post.getUpvotes() + 1);
+            post.setDownvotes(post.getDownvotes() + 1);
         } else {
             vote = maybeVote.get();
             if (VoteTypes.UP_VOTE == vote.getType()) {

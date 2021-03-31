@@ -46,7 +46,7 @@ public class CommentController {
     }
 
     @Operation(summary = "delete a comment.", tags = { "comments" })
-    @DeleteMapping(value ="/{postId}")
+    @DeleteMapping(value ="/{postId}/")
     public ResponseEntity<?> delete(@PathVariable("postId") long postId) {
         var maybeUser = authService.currentUser();
         if (maybeUser.isEmpty()) {
@@ -59,9 +59,9 @@ public class CommentController {
 
     @Operation(summary = "find the comments associated to a post", tags = { "comments" })
     @GetMapping(value = "/{postId}", produces = "application/json")
-    public ResponseEntity<?> findAllOfPost(@PathVariable(name="postId") long postId){
+    public ResponseEntity<?> findAllOfPost(@PathVariable(name="postId") long postId) {
         var maybePost = postService.findById(postId);
-        if(maybePost.isEmpty()) {
+        if (maybePost.isEmpty()) {
             return RestErrorResponse.notFound("post not found");
         }
 
@@ -70,4 +70,23 @@ public class CommentController {
             comments.stream().map(CommentDTO::new).collect(Collectors.toList())
         );
     }
+
+    @Operation(summary = "find the comments created by a specific user", tags = { "comments" })
+    @GetMapping(value = "/by-author/{username}", produces = "application/json")
+    public ResponseEntity<?> findAllOfAuthor(@PathVariable(name="username") String username){
+        var maybeUser = authService.currentUser();
+        if (maybeUser.isEmpty()) {
+            return RestErrorResponse.unauthorized("user not connected");
+        }
+        var user = maybeUser.get();
+        if (!user.getUsername().equals(username)) {
+            return RestErrorResponse.unauthorized("operation not allowed");
+        }
+
+        var comments = commentService.findAllByParentOfAuthor(username);
+        return ResponseEntity.ok(
+            comments.stream().map(CommentDTO::new).collect(Collectors.toList())
+        );
+    }
+
 }

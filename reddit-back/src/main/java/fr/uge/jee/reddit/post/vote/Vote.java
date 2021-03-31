@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "votes")
-// TODO add unique constraint to columns post_id + user_id
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

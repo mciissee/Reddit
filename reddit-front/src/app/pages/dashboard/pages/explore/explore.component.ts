@@ -1,6 +1,6 @@
 import { TemplateRef, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { AuthService, User, PostService, Topic } from '@reddit/core';
+import { AuthService, User, PostService, Post } from '@reddit/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 
@@ -22,7 +22,7 @@ export class ExploreComponent implements OnInit {
 
 
     user?: User;
-    topics: Topic[] = [];
+    topics: Post[] = [];
     requesting = true;
     newTopicTitle = '';
     newTopicContent = '';

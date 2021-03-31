@@ -1,3 +1,22 @@
-<p>
-  topics works!
-</p>
+<mat-card>
+  <mat-card-title>
+    Discussions
+  </mat-card-title>
+</mat-card>
+<br>
+<mat-card>
+  <mat-card-content>
+    <ng-container *ngIf="requesting; else: requestEnded">
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+    </ng-container>
+    <ng-template #requestEnded>
+      <app-post-list [user]="user" [(posts)]="topics"></app-post-list>
+    </ng-template>
+  </mat-card-content>
+</mat-card>

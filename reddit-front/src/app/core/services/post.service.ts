@@ -47,12 +47,28 @@ export class PostService {
         return this.http.get<Comment[]>(this.configService.apiUrl + 'comments/' + postId);
     }
 
+
+    listTopicsOfAuthor(username: string) {
+        return this.http.get<Topic[]>(this.configService.apiUrl + `topics/by-author/${username}`).pipe(
+            map((res: any) => res.content)
+        );
+    }
+
+    listCommentsOfAuthor(username: string) {
+        return this.http.get<Comment[]>(this.configService.apiUrl + `comments/by-author/${username}`);
+    }
+
+
     deleteTopic(postId: number) {
-        return this.http.delete<any>(this.configService.apiUrl + 'topics/' + postId);
+        return this.http.delete(this.configService.apiUrl + 'topics/' + postId + '/', {
+            responseType: 'text'
+        });
     }
 
     deleteComment(postId: number) {
-        return this.http.delete<any>(this.configService.apiUrl + 'comments/' + postId);
+        return this.http.delete(this.configService.apiUrl + 'comments/' + postId + '/', {
+            responseType: 'text'
+        });
     }
 
     voteStatus(postId: number) {
@@ -60,7 +76,7 @@ export class PostService {
     }
 
     unvote(postId: number) {
-        return this.http.delete(this.configService.apiUrl + `votes/${postId}/unvote`);
+        return this.http.delete(this.configService.apiUrl + `votes/${postId}/unvote`, { responseType: 'text' });
     }
 
     upvote(postId: number) {

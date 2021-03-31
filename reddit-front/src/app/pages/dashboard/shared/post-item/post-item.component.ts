@@ -25,6 +25,7 @@ export class PostItemComponent implements OnInit {
     @Input() parent?: Post;
 
     @Output() didChange = new EventEmitter<void>();
+    @Output() didDelete = new EventEmitter<void>();
 
     @ViewChild("tplTitle", { read: TemplateRef })
     tplTitle!: TemplateRef<{}>;
@@ -124,7 +125,7 @@ export class PostItemComponent implements OnInit {
                 this.parent.comments--;
             }
 
-            this.didChange.emit();
+            this.didDelete.emit()
             this.changeDetectorRef.markForCheck();
             this.nzMessageService.success("Post supprimé !");
         } catch (error) {
@@ -137,6 +138,13 @@ export class PostItemComponent implements OnInit {
 
     async upvote(): Promise<void> {
         const oldVote = this.vote;
+        if (oldVote?.type === 'UP_VOTE') {
+            await this.postService.unvote(this.post.id).toPromise();
+            this.post.upvotes--;
+            this.updateVote(undefined);
+            return;
+        }
+
         const newVote = await this.postService.upvote(this.post.id).toPromise();
         if (!oldVote) {
             this.post.upvotes++;
@@ -144,39 +152,35 @@ export class PostItemComponent implements OnInit {
             if (oldVote.type === "DOWN_VOTE") {
                 this.post.upvotes++;
                 this.post.downvotes--;
-            } else {
-                await this.postService.unvote(this.post.id).toPromise();
-                this.post.upvotes--;
             }
         }
 
-        this.post.hotness = this.post.upvotes - this.post.downvotes;
-        this.vote = newVote;
-        this.didChange.emit();
-        this.changeDetectorRef.markForCheck();
+        this.updateVote(newVote);
     }
 
     async downvote(): Promise<void> {
         const oldVote = this.vote;
+        if (oldVote?.type === 'DOWN_VOTE') {
+            await this.postService.unvote(this.post.id).toPromise();
+            this.post.downvotes--;
+            this.updateVote(undefined);
+            return;
+        }
+
         const newVote = await this.postService
             .downvote(this.post.id)
             .toPromise();
+
         if (!oldVote) {
             this.post.downvotes++;
         } else {
             if (oldVote.type === "UP_VOTE") {
                 this.post.downvotes++;
                 this.post.upvotes--;
-            } else {
-                await this.postService.unvote(this.post.id).toPromise();
-                this.post.downvotes--;
             }
         }
 
-        this.post.hotness = this.post.upvotes - this.post.downvotes;
-        this.vote = newVote;
-        this.didChange.emit();
-        this.changeDetectorRef.markForCheck();
+        this.updateVote(newVote);
     }
 
     async showComments(): Promise<void> {
@@ -196,4 +200,13 @@ export class PostItemComponent implements OnInit {
             nzClosable: false,
         });
     }
+
+
+    private updateVote(newVote?: Vote) {
+        this.vote = newVote;
+        this.post.hotness = this.post.upvotes - this.post.downvotes;
+        this.didChange.emit();
+        this.changeDetectorRef.markForCheck();
+    }
+
 }

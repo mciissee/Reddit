@@ -17,7 +17,7 @@
       <nz-skeleton></nz-skeleton>
     </ng-container>
     <ng-template #requestEnded>
-      <app-post-list [user]="user" [posts]="topics"></app-post-list>
+      <app-post-list [user]="user" [(posts)]="topics"></app-post-list>
     </ng-template>
   </mat-card-content>
 </mat-card>

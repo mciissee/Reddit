@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class CommentCreateRequest {
+
     @Schema(description = "content of the comment.", required = true)
     @Size(max = 144)
     private String content;
