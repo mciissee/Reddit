@@ -1,14 +1,17 @@
-package fr.uge.jee.reddit.topic.vote;
+package fr.uge.jee.reddit.post.vote;
 
-import fr.uge.jee.reddit.topic.post.Post;
+import fr.uge.jee.reddit.post.Post;
 import fr.uge.jee.reddit.user.User;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "votes")
+// TODO add unique constraint to columns post_id + user_id
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +25,13 @@ public class Vote {
 
     @Column
     @Enumerated
-    private VoteStatus voteStatus;
+    private VoteTypes type;
 
-    public Vote() {
-    }
+    public Vote() {}
 
-    public Vote(Post post, User user, VoteStatus voteStatus) {
+    public Vote(Post post, User user, VoteTypes type) {
         this.post = post;
         this.user = user;
-        this.voteStatus = voteStatus;
+        this.type = type;
     }
 }

@@ -3,6 +3,8 @@ package fr.uge.jee.reddit.utils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import javax.validation.constraints.NotBlank;
 
@@ -32,4 +34,24 @@ public class RestErrorResponse {
         this.code = code;
         this.message = message;
     }
+
+
+    public static ResponseEntity<RestErrorResponse> notFound(String message) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new RestErrorResponse("rest/not-found", message));
+    }
+
+    public static ResponseEntity<RestErrorResponse> badRequest(String message) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new RestErrorResponse("rest/bad-request", message));
+    }
+
+    public static ResponseEntity<RestErrorResponse> unauthorized(String message) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new RestErrorResponse("rest/unauthorized", message));
+    }
+
 }

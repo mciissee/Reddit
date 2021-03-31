@@ -1,16 +1,16 @@
-package fr.uge.jee.reddit.topic.topic;
+package fr.uge.jee.reddit.post.topic;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import java.sql.Date;
+
 @Getter
 @Setter
-public class TopicResponse {
+public class TopicDTO {
     @NotBlank
-    @Schema(description = "id of the topic", required = true)
+    @Schema(description = "id of the topic post", required = true)
     private long id;
 
     @NotBlank
@@ -26,16 +26,16 @@ public class TopicResponse {
     private String author;
 
     @NotBlank
-    @Schema(description = "upvote count", required = true)
-    private int upvote;
+    @Schema(description = "upvotes count", required = true)
+    private int upvotes;
 
     @NotBlank
-    @Schema(description = "downvote count", required = true)
-    private int downvote;
+    @Schema(description = "downvotes count", required = true)
+    private int downvotes;
 
     @NotBlank
     @Schema(description = "date of creation of the topic", required = true)
-    private Date date;
+    private long date;
 
     @NotBlank
     @Schema(description = "hotness of the topic", required = true)
@@ -44,16 +44,17 @@ public class TopicResponse {
     @Schema(description = "count of comments of this topic", required = true)
     private int comments;
 
-    public TopicResponse(Topic topic) {
-        this.id = topic.getId();
+    public TopicDTO() {}
+
+    public TopicDTO(Topic topic) {
+        this.id = topic.getPost().getId();
         this.title = topic.getTitle();
+        this.date = topic.getPost().getDate().getTime() / 1000;
         this.content = topic.getPost().getContent();
         this.author = topic.getPost().getAuthor().getUsername();
-        this.upvote = topic.getPost().getUpvotes();
-        this.downvote = topic.getPost().getDownvotes();
-        this.hotness = this.upvote - this.downvote;
-        this.date = topic.getPost().getDate();
+        this.hotness = topic.getPost().getHotness();
+        this.upvotes = topic.getPost().getUpvotes();
+        this.downvotes = topic.getPost().getDownvotes();
         this.comments = topic.getPost().getComments();
     }
-
 }

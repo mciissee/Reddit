@@ -1,6 +1,6 @@
-package fr.uge.jee.reddit.topic.topic;
+package fr.uge.jee.reddit.post.topic;
 
-import fr.uge.jee.reddit.topic.post.Post;
+import fr.uge.jee.reddit.post.Post;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,12 @@ import java.util.Objects;
 @Setter
 
 @Entity
-@Table(name = "topics")
+@Table(
+    name = "topics",
+    uniqueConstraints = @UniqueConstraint(
+        columnNames = {"id", "post_id"}
+    )
+)
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +30,16 @@ public class Topic {
     private String title;
 
     @OneToOne(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
     )
     private Post post;
 
     public Topic() {
     }
 
-    public Topic(@NotBlank @Size(max = 144) String title, Post post) {
+    public Topic(String title, Post post) {
         this.title = title;
         this.post = post;
     }

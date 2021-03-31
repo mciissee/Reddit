@@ -1,6 +1,6 @@
-package fr.uge.jee.reddit.topic.comment;
+package fr.uge.jee.reddit.post.comment;
 
-import fr.uge.jee.reddit.topic.post.Post;
+import fr.uge.jee.reddit.post.Post;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,24 +12,30 @@ import java.util.Objects;
 @Setter
 
 @Entity
-@Table(name = "comments")
+@Table(
+    name = "comments",
+    uniqueConstraints = @UniqueConstraint(
+        columnNames = {"id", "post_id", "parent_id" }
+    )
+)
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    private Post parent;
-
     @NotBlank
     @OneToOne(fetch = FetchType.LAZY)
     private Post post;
 
+    @ManyToOne
+    private Post parent;
+
     public Comment() {
     }
 
-    public Comment(@NotBlank Post post) {
+    public Comment(Post post, Post parent) {
         this.post = post;
+        this.parent = parent;
     }
 
     @Override

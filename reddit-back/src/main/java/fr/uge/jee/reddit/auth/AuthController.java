@@ -67,9 +67,7 @@ public class AuthController {
 
             return ResponseEntity.ok(new AuthSignInResponse(jwtUtils.create(authentication)));
         } catch (Exception e) {
-            return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(new RestErrorResponse("auth/unauthorized","There is no user record with the given credentials."));
+            return RestErrorResponse.unauthorized("There is no user record with the given credentials.");
         }
     }
 
@@ -88,15 +86,11 @@ public class AuthController {
     @PostMapping(value = "/sign-up", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> signUp(@Valid @RequestBody AuthSignUpRequest request) {
         if (userService.existsByEmail(request.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new RestErrorResponse("auth/email-already-used","Email is already taken!"));
+            return RestErrorResponse.badRequest("email-already-used");
         }
 
         if (userService.existsByUsername(request.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new RestErrorResponse("auth/username-already-used","Username is already taken!"));
+            return RestErrorResponse.badRequest("username-already-used");
         }
 
         userService.save(
@@ -126,20 +120,16 @@ public class AuthController {
     @PostMapping(value = "/change-password", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> changePassword(@Valid @RequestBody AuthResetPasswordRequest request){
         var opt = authService.currentUser();
-        if (opt.isPresent()) {
-            User user = opt.get();
-            if(!userService.checkIfValidOldPassword(user, request.getOldPassword())){
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(new RestErrorResponse("auth/unauthorized","old password is not correct"));
-            }
-            userService.updatePassword(user, request.getNewPassword());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+        if (opt.isEmpty()) {
+            return RestErrorResponse.unauthorized("user not connected");
         }
-        else {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(new RestErrorResponse("auth/unauthorized","user not connected"));
+
+        User user = opt.get();
+        if(!userService.checkIfValidOldPassword(user, request.getOldPassword())){
+            return RestErrorResponse.unauthorized("old password is not correct");
         }
+
+        userService.updatePassword(user, request.getNewPassword());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

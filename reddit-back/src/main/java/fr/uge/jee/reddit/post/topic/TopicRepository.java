@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.topic.topic;
+package fr.uge.jee.reddit.post.topic;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long>{
-
-    Optional<Topic> findById(long id);
-
-    Page<Topic> findAllByOrderByPostDesc(Pageable pageable);
+    Optional<Topic> findByPostId(long postId);
+    Page<Topic> findAllByOrderByPostHotnessDesc(Pageable pageable);
 }

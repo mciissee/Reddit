@@ -1,21 +1,17 @@
-package fr.uge.jee.reddit.topic.post;
+package fr.uge.jee.reddit.post;
 
-import fr.uge.jee.reddit.topic.comment.Comment;
 import fr.uge.jee.reddit.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.persistence.criteria.Fetch;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.sql.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Getter
 @Setter
-
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -23,18 +19,22 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User author;
+
     @Column
     @NotBlank
     @Size(max = 144)
     private String content;
 
     @NotBlank
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User author;
+    @Column
+    private Date date;
 
     @NotBlank
     @Column
-    private Date date;
+    private int hotness;
 
     @NotBlank
     @Column
@@ -48,12 +48,13 @@ public class Post {
     @Column
     private int comments;
 
-    public Post(@NotBlank @Size(max = 144) String content, @NotBlank User author, @NotBlank Date date, @NotBlank int upvotes, @NotBlank int downvotes) {
+    public Post(User author, String content) {
         this.content = content;
         this.author = author;
-        this.date = date;
-        this.upvotes = upvotes;
-        this.downvotes = downvotes;
+        this.date = new Date(System.currentTimeMillis());
+        this.hotness = 0;
+        this.upvotes = 0;
+        this.downvotes = 0;
     }
 
     public Post() {

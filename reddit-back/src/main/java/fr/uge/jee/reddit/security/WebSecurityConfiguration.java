@@ -3,6 +3,7 @@ package fr.uge.jee.reddit.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -69,7 +70,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authenticationErrorHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+                .authorizeRequests()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/topics/**", HttpMethod.GET.toString()).permitAll()
+                .antMatchers("/api/comments/**", HttpMethod.GET.toString()).permitAll()
+                .antMatchers("/api/votes/**", HttpMethod.GET.toString()).permitAll()
+
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/v3/api-docs/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
