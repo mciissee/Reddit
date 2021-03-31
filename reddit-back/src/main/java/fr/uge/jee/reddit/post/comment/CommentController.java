@@ -26,8 +26,8 @@ public class CommentController {
     private CommentService commentService;
 
     @Operation(summary = "create a comment.", tags = { "comments" })
-    @PostMapping(value ="/{postId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> create(@PathVariable("postId") long postId, String content) {
+    @PostMapping(value ="/{postId}/", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<?> create(@PathVariable("postId") long postId, @RequestBody CommentCreateRequest request) {
         var maybeUser = authService.currentUser();
         if (maybeUser.isEmpty()) {
             return RestErrorResponse.unauthorized("user not connected");
@@ -41,7 +41,7 @@ public class CommentController {
         var parent = maybePost.get();
 
         return ResponseEntity.ok(
-            new CommentDTO(commentService.create(author, parent, content))
+            new CommentDTO(commentService.create(author, parent, request.getContent()))
         );
     }
 
