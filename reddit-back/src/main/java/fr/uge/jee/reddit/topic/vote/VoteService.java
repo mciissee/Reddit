@@ -4,6 +4,8 @@ import fr.uge.jee.reddit.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class VoteService {
     @Autowired
@@ -11,7 +13,5 @@ public class VoteService {
 
     public Vote save(Vote vote){return voteRepository.saveAndFlush(vote);}
 
-    public Boolean existsLikeByDownusersIsContaining(User user){ return voteRepository.existsLikeByDownusersIsContaining(user);}
-
-    public Boolean existsLikeByUpusersIsContaining(User user){ return voteRepository.existsLikeByUpusersIsContaining(user);}
+    public List<Vote> findAllByPost_id(long id){return voteRepository.findAllByPost_Id(id);}
 }

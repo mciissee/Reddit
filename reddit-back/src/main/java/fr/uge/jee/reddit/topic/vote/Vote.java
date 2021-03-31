@@ -20,11 +20,16 @@ public class Vote {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @Column
+    @Enumerated
+    private VoteStatus voteStatus;
+
     public Vote() {
     }
 
-    public Vote(Post post, User user) {
+    public Vote(Post post, User user, VoteStatus voteStatus) {
         this.post = post;
         this.user = user;
+        this.voteStatus = voteStatus;
     }
 }
