@@ -44,7 +44,7 @@ public class CommentDTO {
 
     public CommentDTO(Comment topic) {
         this.id = topic.getPost().getId();
-        this.date = topic.getPost().getDate().getTime() / 1000;
+        this.date = topic.getPost().getDate().getTime();
         this.content = topic.getPost().getContent();
         this.author = topic.getPost().getAuthor().getUsername();
         this.hotness = topic.getPost().getHotness();

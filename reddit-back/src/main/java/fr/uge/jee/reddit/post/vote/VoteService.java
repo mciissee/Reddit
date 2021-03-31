@@ -30,6 +30,11 @@ public class VoteService {
     }
 
     @Transactional
+    public void delete(long id){
+        voteRepository.delete(voteRepository.findById(id).get());
+    }
+
+    @Transactional
     public void unvote(User user, Post post) {
         Vote vote;
         Optional<Vote> maybeVote = voteRepository.findByUserUsernameAndPostId(

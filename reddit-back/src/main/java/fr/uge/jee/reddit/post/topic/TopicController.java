@@ -69,6 +69,10 @@ public class TopicController {
             return RestErrorResponse.unauthorized("only admin users can delete topics");
         }
 
+        var maybeTopic = topicService.findById(postId);
+        if(maybeTopic.isEmpty())
+            return RestErrorResponse.notFound("topic not found");
+
         topicService.delete(postId);
         return ResponseEntity.status(HttpStatus.OK).body("deleted");
     }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,7 +28,7 @@ public class CommentController {
 
     @Operation(summary = "create a comment.", tags = { "comments" })
     @PostMapping(value ="/{postId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> create(@PathVariable("postId") long postId, String content) {
+    public ResponseEntity<?> create(@PathVariable("postId") long postId, @Valid @RequestBody CommentCreateRequest request) {
         var maybeUser = authService.currentUser();
         if (maybeUser.isEmpty()) {
             return RestErrorResponse.unauthorized("user not connected");
@@ -41,7 +42,7 @@ public class CommentController {
         var parent = maybePost.get();
 
         return ResponseEntity.ok(
-            new CommentDTO(commentService.create(author, parent, content))
+            new CommentDTO(commentService.create(author, parent, request.getContent()))
         );
     }
 

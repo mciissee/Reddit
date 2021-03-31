@@ -2,6 +2,7 @@ package fr.uge.jee.reddit.post.comment;
 
 import fr.uge.jee.reddit.post.Post;
 import fr.uge.jee.reddit.post.PostService;
+import fr.uge.jee.reddit.post.vote.VoteService;
 import fr.uge.jee.reddit.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public class CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private PostService postService;
+    @Autowired
+    private VoteService voteService;
 
     public Comment save(Comment comment) {
         return commentRepository.save(comment);
@@ -29,6 +32,10 @@ public class CommentService {
         var parent = postService.findById(comment.getParent().getId()).get();
         parent.setComments(parent.getComments() - 1);
         postService.save(parent);
+
+        //delete votes
+        var votes = voteService.findAllOfPost(postId);
+        votes.forEach(vote -> voteService.delete(vote.getId()));
 
         // delete post
         postService.delete(comment.getPost());
