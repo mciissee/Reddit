@@ -1,0 +1,3 @@
+<ng-container *ngFor="let post of posts; trackBy: trackById">
+  <app-post-item [user]="user" [post]="post" [parent]="parent" (didChange)="sort()"></app-post-item>
+</ng-container>

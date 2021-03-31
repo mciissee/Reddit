@@ -1,16 +1,34 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { ListItemCommentComponent } from './list-item-comment/list-item-comment.component';
-import { ListItemTopicComponent } from './list-item-topic/list-item-topic.component';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { NzAvatarModule } from "ng-zorro-antd/avatar";
+import { NzButtonModule } from "ng-zorro-antd/button";
+import { NzCommentModule } from "ng-zorro-antd/comment";
+import { NzIconModule } from "ng-zorro-antd/icon";
+import { NzMessageModule } from "ng-zorro-antd/message";
+import { NzModalModule } from "ng-zorro-antd/modal";
+import { NzToolTipModule } from "ng-zorro-antd/tooltip";
+import { PostItemComponent } from "./post-item/post-item.component";
+import { PostListComponent } from "./post-list/post-list.component";
 
-import { NzCommentModule } from 'ng-zorro-antd/comment';
-import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
-
+//import { Modu } from '@angular/cdk/text-field'
 @NgModule({
-    imports: [CommonModule, NzIconModule, NzAvatarModule, NzCommentModule, NzToolTipModule],
-    exports: [ListItemCommentComponent, ListItemTopicComponent],
-    declarations: [ListItemCommentComponent, ListItemTopicComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatFormFieldModule,
+        NzButtonModule,
+        MatInputModule,
+        NzIconModule,
+        NzAvatarModule,
+        NzModalModule,
+        NzCommentModule,
+        NzToolTipModule,
+        NzMessageModule,
+    ],
+    exports: [PostItemComponent, PostListComponent],
+    declarations: [PostItemComponent, PostListComponent],
 })
-export class DashboardSharedModule { }
+export class DashboardSharedModule {}

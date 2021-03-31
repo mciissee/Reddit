@@ -1,0 +1,57 @@
+<nz-comment [nzAuthor]="post.author" [nzDatetime]="time">
+  <ng-template #time>
+    {{post.date|date}}
+  </ng-template>
+  <nz-avatar nz-comment-avatar nzIcon="user"></nz-avatar>
+  <nz-comment-content>
+    <h2 *ngIf="title">{{title}}</h2>
+    <p>{{post.content}}</p>
+  </nz-comment-content>
+
+  <!-- BUG CANNOT USE *ngIf on nz-comment-action elements -->
+
+  <nz-comment-action>
+    <ng-container *ngIf="canVote">
+      <i nz-tooltip nzTitle="Upvote" nz-icon nzType="like" [nzTheme]="vote?.type == 'UP_VOTE' ? 'twotone' : 'outline'" (click)="upvote()"></i>
+      <span>&nbsp; {{ post.upvotes }}</span>
+    </ng-container>
+  </nz-comment-action>
+  <nz-comment-action>
+    <ng-container *ngIf="canVote">
+      <i nz-tooltip nzTitle="Downvotes" nz-icon nzType="dislike" [nzTheme]="vote?.type == 'DOWN_VOTE' ? 'twotone' : 'outline'" (click)="downvote()"></i>
+      <span>&nbsp;{{ post.downvotes }}</span>
+    </ng-container>
+  </nz-comment-action>
+
+  <nz-comment-action>
+    <ng-container >
+      <i nz-tooltip nzTitle="Comments" nz-icon nzType="comment" [nzTheme]="'outline'" (click)="showComments()"></i>
+      <span>&nbsp;{{ post.comments }}</span>
+    </ng-container>
+  </nz-comment-action>
+
+  <nz-comment-action>
+    <span *ngIf="canDelete" (click)="delete()">Supprimer</span>
+  </nz-comment-action>
+  <nz-comment-action>
+    <span *ngIf="canReply" (click)="openCommentDialog()">Répondre</span>
+  </nz-comment-action>
+</nz-comment>
+
+<div class="comments" *ngIf="canShowComments">
+  <app-post-list [user]="user" [posts]="comments" [parent]="post"></app-post-list>
+</div>
+
+
+<ng-template #tplTitle>
+  <span>Nouveau commentaire</span>
+</ng-template>
+<ng-template #tplContent>
+  <mat-form-field>
+    <textarea [(ngModel)]="newComment" #input matInput placeholder="Votre commentaire..." [matTextareaAutosize]="true"></textarea>
+  </mat-form-field>
+</ng-template>
+<ng-template #tplFooter let-ref="modalRef">
+  <button nz-button (click)="ref.destroy()">Annuler</button>
+  <button nz-button nzType="primary" [disabled]="!canSubmitCommentForm" (click)="comment(); ref.destroy()">Créer</button>
+</ng-template>

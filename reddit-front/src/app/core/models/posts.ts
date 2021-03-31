@@ -1,16 +1,12 @@
-interface Post {
+export interface Post {
     id: number;
-    text: string;
     date: number;
+    content: string;
     author: string;
-    upvotes: {
-        count: number;
-        active: boolean;
-    };
-    downvotes: {
-        count: number;
-        active: boolean;
-    };
+    upvotes: number;
+    hotness: number;
+    comments: number;
+    downvotes: number;
 }
 
 export interface Topic extends Post {
@@ -22,4 +18,10 @@ export interface Comment extends Post {
         id: number;
         type: 'TOPIC' | 'COMMENT';
     };
+}
+
+export interface Vote {
+    username: string;
+    postId: number;
+    type: 'UP_VOTE' | 'DOWN_VOTE';
 }

@@ -1,15 +1,41 @@
 <mat-card>
   <mat-card-title>
     Explore
-    <button nz-button nzType="primary" nzShape="round">Nouveau post</button>
+    <button nz-button nzType="primary" nzShape="round" *ngIf="!!user" (click)="openTopicDialog()">Nouveau post</button>
   </mat-card-title>
 </mat-card>
 <br>
 <mat-card>
   <mat-card-content>
-    <app-list-item-topic [user]="user"></app-list-item-topic>
-    <app-list-item-topic [user]="user"></app-list-item-topic>
-    <app-list-item-topic [user]="user"></app-list-item-topic>
-    <app-list-item-topic [user]="user"></app-list-item-topic>
+    <ng-container *ngIf="requesting; else: requestEnded">
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+      <nz-skeleton></nz-skeleton>
+    </ng-container>
+    <ng-template #requestEnded>
+      <app-post-list [user]="user" [posts]="topics"></app-post-list>
+    </ng-template>
   </mat-card-content>
 </mat-card>
+
+
+<ng-template #tplTitle>
+  <span>Nouveau topic</span>
+</ng-template>
+<ng-template #tplContent>
+  <mat-form-field>
+    <mat-label>Titre...</mat-label>
+    <input type="text" [(ngModel)]="newTopicTitle" #input matInput />
+  </mat-form-field>
+  <mat-form-field>
+    <textarea [(ngModel)]="newTopicContent" #input matInput placeholder="Contenu..." [matTextareaAutosize]="true"></textarea>
+  </mat-form-field>
+</ng-template>
+<ng-template #tplFooter let-ref="modalRef">
+  <button nz-button (click)="ref.destroy()">Annuler</button>
+  <button nz-button nzType="primary" [disabled]="!canSubmitTopicForm" (click)="createTopic(); ref.destroy()">Créer</button>
+</ng-template>
