@@ -8,6 +8,6 @@ import java.util.ArrayList;
 public class PostFactory {
 
     public static Post createPost(String content, User user) {
-        return new Post(content,  user, new Date(System.currentTimeMillis()), 0, 0, new ArrayList<>());
+        return new Post(content,  user, new Date(System.currentTimeMillis()), 0, 0);
     }
 }

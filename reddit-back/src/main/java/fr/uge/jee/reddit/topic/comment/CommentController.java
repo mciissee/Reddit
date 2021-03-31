@@ -4,6 +4,7 @@ import fr.uge.jee.reddit.auth.AuthErrorResponse;
 import fr.uge.jee.reddit.auth.AuthService;
 import fr.uge.jee.reddit.topic.post.ErrorResponse;
 import fr.uge.jee.reddit.topic.post.Post;
+import fr.uge.jee.reddit.topic.post.PostFactory;
 import fr.uge.jee.reddit.topic.post.PostService;
 import fr.uge.jee.reddit.topic.vote.Vote;
 import fr.uge.jee.reddit.topic.vote.VoteService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -41,20 +43,24 @@ public class CommentController {
 
     @Operation(summary = "create a comment.", tags = { "comments" })
     @PostMapping(value ="/{postId}", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createComment(@PathVariable("postId") long id, String content){
+    public ResponseEntity<?> createComment(@PathVariable("postId") long postId, String content){
         var opt = authService.currentUser();
         if (opt.isPresent()) {
             User user = opt.get();
-            var post = postService.findById(id);
-            if(post.isEmpty())
+            var maybePost = postService.findById(postId);
+            if(maybePost.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(new ErrorResponse("post/not-found","post not found"));
+                        .body(new ErrorResponse("post/not-found", "post not found"));
+            }
+            var parentPost = maybePost.get();
+            var post = PostFactory.createPost(content, user);
 
+            postService.save(post);
+            var comment = commentService.save(new Comment(post));
+            parentPost.setComments(parentPost.getComments() + 1);
 
-            var comment = commentService.save(new Comment(post.get()));
-            post.get().getComments().add(comment);
-            postService.save(post.get());
+            postService.save(parentPost);
             return ResponseEntity.ok(comment);
         }
         else {
@@ -64,29 +70,17 @@ public class CommentController {
         }
     }
 
-    @Operation(summary = "find a comment.", tags = { "comments" })
-    @GetMapping(value ="/{postId}", consumes = "application/long", produces = "application/json")
-    public ResponseEntity<?> findById(@PathVariable("postId") long id){
-        var comment = commentService.findById(id);
-        if(comment.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(new CommentResponse(comment.get()));
-    }
-
-/*
     @Operation(summary = "find a comment by his id and return the like of a specified comment.", tags = { "comments" })
     @GetMapping(value = "/{postId}/comments", produces = "application/json")
-    public ResponseEntity<?> findById_commentId_like(@PathVariable(name="postId") long id, @PathVariable(name="subCommentId") long commentId){
-        Comment comment = new Comment();
-        comment.setId(commentId);
-        int i = comment.getCommentList().indexOf(comment);
-        if(i == -1)
+    public ResponseEntity<?> findAllComments(@PathVariable(name="postId") long postId){
+        var maybePost = postService.findById(postId);
+        if(maybePost.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new CommentErrorResponse("comment/not-found","comment not found"));
+                    .body(new ErrorResponse("post/not-found", "post not found"));
+        }
 
-        return ResponseEntity.ok(comment.getCommentList().get(i).getLike());
+        var comments = commentService.findAllByParent(maybePost.get());
+        return ResponseEntity.ok(comments.stream().map(CommentDTO::new).collect(Collectors.toList()));
     }
-*/
 }

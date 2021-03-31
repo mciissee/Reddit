@@ -18,6 +18,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @ManyToOne
+    private Post parent;
+
     @NotBlank
     @OneToOne(fetch = FetchType.LAZY)
     private Post post;

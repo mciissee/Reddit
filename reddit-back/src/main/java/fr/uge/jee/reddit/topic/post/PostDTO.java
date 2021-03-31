@@ -14,8 +14,6 @@ public class PostDTO {
 
     private String author;
 
-    private VoteStatus userVoteStatus;
-
     private Date date;
 
     private int upvotes;
@@ -24,16 +22,16 @@ public class PostDTO {
 
     private int comments;
 
-    public PostDTO(String content, String author, VoteStatus userVoteStatus, Date date, int upvotes, int downvotes, int comments) {
-        this.content = content;
-        this.author = author;
-        this.userVoteStatus = userVoteStatus;
-        this.date = date;
-        this.upvotes = upvotes;
-        this.downvotes = downvotes;
-        this.comments = comments;
+    public PostDTO(Post post) {
+        this.content = post.getContent();
+        this.author = post.getAuthor().getUsername();
+        this.date = post.getDate();
+        this.upvotes = post.getUpvotes();
+        this.downvotes = post.getDownvotes();
+        this.comments = post.getComments();
     }
 
     public PostDTO() {
     }
+
 }

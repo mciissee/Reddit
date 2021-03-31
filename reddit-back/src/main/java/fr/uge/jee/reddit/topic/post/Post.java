@@ -44,20 +44,16 @@ public class Post {
     @Column
     private int downvotes;
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private List<Comment> comments;
+    @NotBlank
+    @Column
+    private int comments;
 
-    public Post(@NotBlank @Size(max = 144) String content, @NotBlank User author, @NotBlank Date date, @NotBlank int upvotes, @NotBlank int downvotes, @NotBlank List<Comment> comments) {
+    public Post(@NotBlank @Size(max = 144) String content, @NotBlank User author, @NotBlank Date date, @NotBlank int upvotes, @NotBlank int downvotes) {
         this.content = content;
         this.author = author;
         this.date = date;
         this.upvotes = upvotes;
         this.downvotes = downvotes;
-        this.comments = comments;
     }
 
     public Post() {
