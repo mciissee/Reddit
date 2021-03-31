@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/votes")
-@Tag(name = "comments", description = "The comments API.")
+@Tag(name = "votes", description = "The votes API.")
 public class VoteController {
 
     @Autowired
