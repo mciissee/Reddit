@@ -43,13 +43,6 @@ public class CommentResponse {
 
     public CommentResponse(Comment comment) {
         this.id = comment.getId();
-        this.content = comment.getResponse();
-        this.author = comment.getOwner().getUsername();
-        this.upvote = comment.getLike().getUpvotes();
-        this.downvote = comment.getLike().getDownvotes();
-        this.hotness = comment.getLike().getHotness();
-        this.date = comment.getDate();
-        this.subComments = comment.getCommentList().stream().map(Comment::getId).collect(Collectors.toList());
     }
 
     public long getId() {
@@ -60,59 +53,4 @@ public class CommentResponse {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public int getUpvote() {
-        return upvote;
-    }
-
-    public void setUpvote(int upvote) {
-        this.upvote = upvote;
-    }
-
-    public int getDownvote() {
-        return downvote;
-    }
-
-    public void setDownvote(int downvote) {
-        this.downvote = downvote;
-    }
-
-    public int getHotness() {
-        return hotness;
-    }
-
-    public void setHotness(int hotness) {
-        this.hotness = hotness;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public List<Long> getSubComments() {
-        return subComments;
-    }
-
-    public void setSubComments(List<Long> subComments) {
-        this.subComments = subComments;
-    }
 }

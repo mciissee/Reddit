@@ -12,9 +12,9 @@ public class TopicCreateRequest {
     @Size(max = 144)
     private String Title;
 
-    @Schema(description = "Content of the topic.", required = true)
+    @Schema(description = "content of the topic.", required = true)
     @Size(max = 144)
-    private String Content;
+    private String content;
 
     public TopicCreateRequest() {
     }
