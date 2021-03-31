@@ -61,6 +61,6 @@ public class CommentService {
 
     @Transactional(readOnly = true)
     public List<Comment> findAllByParent(Post parent) {
-        return commentRepository.findAllByParent(parent);
+        return commentRepository.findByParentOrderByPostHotnessDesc(parent);
     }
 }
