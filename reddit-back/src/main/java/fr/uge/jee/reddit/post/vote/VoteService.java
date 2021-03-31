@@ -39,7 +39,7 @@ public class VoteService {
 
         if (maybeVote.isPresent()) {
             vote = maybeVote.get();
-            if (vote.getType().equals(VoteTypes.DOWN_VOTE)) {
+            if (VoteTypes.DOWN_VOTE == vote.getType()) {
                 post.setDownvotes(post.getDownvotes() - 1);
             } else {
                 post.setUpvotes(post.getUpvotes() - 1);
@@ -64,7 +64,7 @@ public class VoteService {
             post.setUpvotes(post.getUpvotes() + 1);
         } else {
             vote = maybeVote.get();
-            if (vote.getType().equals(VoteTypes.DOWN_VOTE)) {
+            if (VoteTypes.DOWN_VOTE == vote.getType()) {
                 post.setUpvotes(post.getUpvotes() + 1);
                 post.setDownvotes(post.getDownvotes() - 1);
                 vote.setType(VoteTypes.UP_VOTE);
@@ -90,7 +90,7 @@ public class VoteService {
             post.setUpvotes(post.getUpvotes() + 1);
         } else {
             vote = maybeVote.get();
-            if (vote.getType().equals(VoteTypes.UP_VOTE)) {
+            if (VoteTypes.UP_VOTE == vote.getType()) {
                 post.setDownvotes(post.getDownvotes() + 1);
                 post.setUpvotes(post.getUpvotes() - 1);
                 vote.setType(VoteTypes.DOWN_VOTE);

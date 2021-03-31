@@ -57,7 +57,7 @@ public class TopicController {
         return ResponseEntity.ok(new TopicDTO(topic));
     }
 
-    @Operation(summary = "delete a comment.", tags = { "comments" })
+    @Operation(summary = "delete a topic.", tags = { "comments" })
     @DeleteMapping(value ="/{postId}")
     public ResponseEntity<?> delete(@PathVariable("postId") long postId) {
         var maybeUser = authService.currentUser();

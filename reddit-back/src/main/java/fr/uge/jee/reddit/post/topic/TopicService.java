@@ -2,6 +2,8 @@ package fr.uge.jee.reddit.post.topic;
 
 import fr.uge.jee.reddit.post.Post;
 import fr.uge.jee.reddit.post.PostService;
+import fr.uge.jee.reddit.post.comment.CommentService;
+import fr.uge.jee.reddit.post.vote.VoteService;
 import fr.uge.jee.reddit.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +35,7 @@ public class TopicService {
     public void delete(long postId) {
         var topic = topicRepository.findByPostId(postId).get();
 
-        // TODO decrement comments
+        // TODO delete comments
 
         // TODO delete votes
 

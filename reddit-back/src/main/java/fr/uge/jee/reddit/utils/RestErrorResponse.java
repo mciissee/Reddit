@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import javax.validation.constraints.NotBlank;
 
 /**
- * Representation of an error response of the auth api.
+ * Representation of an error response of the rest api.
  */
 @Getter
 @Setter
@@ -26,7 +26,7 @@ public class RestErrorResponse {
     public RestErrorResponse() {}
 
     /**
-     * Builds new AuthError object.
+     * Builds new RestErrorResponse object.
      * @param code Unique identifier of the error.
      * @param message Human readable string describing the error.
      */
