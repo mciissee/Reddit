@@ -80,9 +80,14 @@ export class AuthService {
         return this.ready();
     }
 
-    signUp(args: SignUpArgs): Observable<void> {
-        return this.http.post<void>(this.url('sign-up'), args, {
+    async signUp(args: SignUpArgs): Promise<User | undefined> {
+        await this.http.post<void>(this.url('sign-up'), args, {
             headers: JSON_CONTENT
+        }).toPromise();
+
+        return this.signIn({
+            username: args.username,
+            password: args.password
         });
     }
 

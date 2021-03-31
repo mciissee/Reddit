@@ -49,5 +49,4 @@ export class SignInComponent implements OnInit {
         this.messageService.success('Bienvenue ' + user.username);
         this.router.navigateByUrl('/dashboard', { replaceUrl: true });
     }
-
 }

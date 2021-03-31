@@ -1,0 +1,29 @@
+:host {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+.login-form {
+  max-width: 400px;
+}
+
+.login-form-margin {
+  margin-bottom: 16px;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.login-form-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
