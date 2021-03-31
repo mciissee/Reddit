@@ -18,9 +18,9 @@ public class TopicService {
         return topicRepository.saveAndFlush(topic);
     }
 
-    public ResponseEntity<?> findAllByAuthorOrderByLikeDesc(User Author){return ResponseEntity.ok(topicRepository.findAllByAuthorOrderByLikeDesc(Author));}
-
-    public Page<Topic> findAllByOrderByLikeDesc(Pageable pageable){return topicRepository.findAllByOrderByLikeDesc(pageable);}
-
     public Optional<Topic> findById(long id){return topicRepository.findById(id);}
+
+    public Object findAllByOrderByLikeDesc(Pageable pageable) {
+        return topicRepository.findAllByOrderByPostDesc(pageable);
+    }
 }
