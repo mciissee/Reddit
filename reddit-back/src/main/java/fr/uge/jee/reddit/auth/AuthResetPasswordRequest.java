@@ -12,12 +12,12 @@ import javax.validation.constraints.Size;
 public class AuthResetPasswordRequest {
 
     @NotBlank
-    @Size(min = 6, max = 40)
+    @Size(min = 4, max = 40)
     @Schema(description = "Old password of the user to change.", required = true)
     private String oldPassword;
 
     @NotBlank
-    @Size(min = 6, max = 40)
+    @Size(min = 4, max = 40)
     @Schema(description = "New password of the user to change.", required = true)
     private String newPassword;
 

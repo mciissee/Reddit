@@ -23,10 +23,17 @@
         {{user!.username|uppercase}}
         <nz-avatar nzSize="default" nzIcon="user"></nz-avatar>
         <ng-template #content>
-          <button (click)="signOut()" nz-button nzType="default" nzShape="round">
-            <i nz-icon nzType="logout"></i>
-            Deconnexion
-          </button>
+          <div style="display: flex; flex-direction: column;">
+            <button (click)="openResetPasswordDialog()" nz-button nzType="default" nzShape="round">
+              <i nz-icon nzType="security-scan"></i>
+              Modifier votre mot de passe
+            </button>
+            <br/>
+            <button (click)="signOut()" nz-button nzType="default" nzShape="round">
+              <i nz-icon nzType="logout"></i>
+              Deconnexion
+            </button>
+          </div>
         </ng-template>
       </button>
     </ng-container>
@@ -42,3 +49,23 @@
     </ng-template>
   </nz-page-header-extra>
 </nz-page-header>
+
+
+
+<ng-template #tplTitle>
+  <span>Modifier votre mot de passe</span>
+</ng-template>
+<ng-template #tplContent>
+  <mat-form-field>
+    <mat-label>Entrez votre ancien mot de passe</mat-label>
+    <input type="password" [(ngModel)]="oldPassword" matInput />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Entrez votre nouveau mot de passe</mat-label>
+    <input type="password" [(ngModel)]="newPassword" matInput />
+  </mat-form-field>
+</ng-template>
+<ng-template #tplFooter let-ref="modalRef">
+  <button nz-button (click)="ref.destroy()">Annuler</button>
+  <button nz-button nzType="primary" [disabled]="!canSubmitResetPasswordForm" (click)="resetPassword(); ref.destroy()">Créer</button>
+</ng-template>

@@ -91,6 +91,13 @@ export class AuthService {
         });
     }
 
+    async resetPassword(args: ResetPasswordArgs): Promise<void> {
+        await this.http.post(this.url('change-password'), args, {
+            headers: JSON_CONTENT,
+            responseType: 'text'
+        }).toPromise();
+    }
+
     private url(suffix: string): string {
         return this.configService.apiUrl + 'auth/' + suffix;
     }
@@ -112,6 +119,10 @@ export interface SignUpArgs {
     password: string;
 }
 
+export interface ResetPasswordArgs {
+    oldPassword: string;
+    newPassword: string;
+}
 export interface SignInResponse {
     token: string;
 }
