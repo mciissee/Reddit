@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.topic.like;
+package fr.uge.jee.reddit.auth;
 
 import fr.uge.jee.reddit.user.User;
 import fr.uge.jee.reddit.user.UserService;
@@ -7,20 +7,16 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
-@RestController
-public class LikeController {
+@Service
+public class AuthService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private LikeService likeService;
-
-    private Optional<User> currentUser(){
+    public Optional<User> currentUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             UserDetails details = (UserDetails) auth.getPrincipal();
@@ -29,14 +25,4 @@ public class LikeController {
         }
         return Optional.empty();
     }
-
-    public Like createLike(){
-        if(currentUser().isEmpty())
-            return null;
-        return likeService.save(new Like(0, 0, 0, new ArrayList<>(), new ArrayList<>()));
-    }
-
-    /*public boolean upDownVote(boolean upDown){
-        
-    }*/
 }

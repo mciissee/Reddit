@@ -1,10 +1,14 @@
-package fr.uge.jee.reddit.topic.topic;
+package fr.uge.jee.reddit.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
-public class TopicErrorResponse {
+@Getter
+@Setter
+public class UserErrorResponse {
 
     @NotBlank
     @Schema(description = "Unique identifier of the error.", required = true)
@@ -14,31 +18,15 @@ public class TopicErrorResponse {
     @Schema(description = "Human readable string describing the error.", required = true)
     private String message;
 
-    public TopicErrorResponse() {}
+    public UserErrorResponse() {}
 
     /**
-     * Builds new AuthError object.
+     * Builds new UserError object.
      * @param code Unique identifier of the error.
      * @param message Human readable string describing the error.
      */
-    public TopicErrorResponse(@NotBlank String code, @NotBlank String message) {
+    public UserErrorResponse(@NotBlank String code, @NotBlank String message) {
         this.code = code;
-        this.message = message;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
     }
 }

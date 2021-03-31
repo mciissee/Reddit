@@ -1,12 +1,16 @@
 package fr.uge.jee.reddit.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
 /**
  *  Representation of the sign in request body object.
  */
+@Getter
+@Setter
 public class AuthSignInRequest {
 
     @NotBlank
@@ -18,20 +22,4 @@ public class AuthSignInRequest {
     private String password;
 
     public AuthSignInRequest() {}
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

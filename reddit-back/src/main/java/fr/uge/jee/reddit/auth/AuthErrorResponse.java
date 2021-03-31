@@ -1,12 +1,16 @@
 package fr.uge.jee.reddit.auth;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 
 /**
  * Representation of an error response of the auth api.
  */
+@Getter
+@Setter
 public class AuthErrorResponse {
 
     @NotBlank
@@ -26,22 +30,6 @@ public class AuthErrorResponse {
      */
     public AuthErrorResponse(@NotBlank String code, @NotBlank String message) {
         this.code = code;
-        this.message = message;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
     }
 }
