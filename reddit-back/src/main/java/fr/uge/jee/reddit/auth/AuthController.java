@@ -3,6 +3,7 @@ package fr.uge.jee.reddit.auth;
 import fr.uge.jee.reddit.security.JwtUtils;
 import fr.uge.jee.reddit.user.*;
 
+import fr.uge.jee.reddit.utils.RestErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,7 +54,7 @@ public class AuthController {
         @ApiResponse(
             responseCode = "401",
             description = "auth/unauthorized",
-            content = @Content(schema = @Schema(implementation = AuthErrorResponse.class))
+            content = @Content(schema = @Schema(implementation = RestErrorResponse.class))
         )
     })
     @PostMapping(value = "/sign-in", consumes = "application/json", produces = "application/json")
@@ -68,7 +69,7 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(new AuthErrorResponse("auth/unauthorized","There is no user record with the given credentials."));
+                .body(new RestErrorResponse("auth/unauthorized","There is no user record with the given credentials."));
         }
     }
 
@@ -81,7 +82,7 @@ public class AuthController {
         @ApiResponse(
             responseCode = "404",
             description = "auth/username-already-used | auth/email-already-used",
-            content = @Content(schema = @Schema(implementation = AuthErrorResponse.class))
+            content = @Content(schema = @Schema(implementation = RestErrorResponse.class))
         )
     })
     @PostMapping(value = "/sign-up", consumes = "application/json", produces = "application/json")
@@ -89,13 +90,13 @@ public class AuthController {
         if (userService.existsByEmail(request.getEmail())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new AuthErrorResponse("auth/email-already-used","Email is already taken!"));
+                    .body(new RestErrorResponse("auth/email-already-used","Email is already taken!"));
         }
 
         if (userService.existsByUsername(request.getUsername())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new AuthErrorResponse("auth/username-already-used","Username is already taken!"));
+                    .body(new RestErrorResponse("auth/username-already-used","Username is already taken!"));
         }
 
         userService.save(
@@ -130,7 +131,7 @@ public class AuthController {
             if(!userService.checkIfValidOldPassword(user, request.getOldPassword())){
                 return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
-                        .body(new AuthErrorResponse("auth/unauthorized","old password is not correct"));
+                        .body(new RestErrorResponse("auth/unauthorized","old password is not correct"));
             }
             userService.updatePassword(user, request.getNewPassword());
             return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -138,7 +139,7 @@ public class AuthController {
         else {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body(new AuthErrorResponse("auth/unauthorized","user not connected"));
+                    .body(new RestErrorResponse("auth/unauthorized","user not connected"));
         }
     }
 }

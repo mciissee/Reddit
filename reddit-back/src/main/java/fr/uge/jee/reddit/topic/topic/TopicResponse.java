@@ -9,7 +9,6 @@ import java.sql.Date;
 @Getter
 @Setter
 public class TopicResponse {
-
     @NotBlank
     @Schema(description = "id of the topic", required = true)
     private long id;
@@ -43,7 +42,7 @@ public class TopicResponse {
     private int hotness;
 
     @Schema(description = "count of comments of this topic", required = true)
-    private int commentList;
+    private int comments;
 
     public TopicResponse(Topic topic) {
         this.id = topic.getId();
@@ -54,7 +53,7 @@ public class TopicResponse {
         this.downvote = topic.getPost().getDownvotes();
         this.hotness = this.upvote - this.downvote;
         this.date = topic.getPost().getDate();
-        this.commentList = topic.getPost().getComments().size();
+        this.comments = topic.getPost().getComments();
     }
 
 }

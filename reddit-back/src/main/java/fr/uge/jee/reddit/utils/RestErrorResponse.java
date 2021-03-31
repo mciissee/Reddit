@@ -1,4 +1,4 @@
-package fr.uge.jee.reddit.auth;
+package fr.uge.jee.reddit.utils;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Getter
 @Setter
-public class AuthErrorResponse {
+public class RestErrorResponse {
 
     @NotBlank
     @Schema(description = "Unique identifier of the error.", required = true)
@@ -21,14 +21,14 @@ public class AuthErrorResponse {
     @Schema(description = "Human readable string describing the error.", required = true)
     private String message;
 
-    public AuthErrorResponse() {}
+    public RestErrorResponse() {}
 
     /**
      * Builds new AuthError object.
      * @param code Unique identifier of the error.
      * @param message Human readable string describing the error.
      */
-    public AuthErrorResponse(@NotBlank String code, @NotBlank String message) {
+    public RestErrorResponse(@NotBlank String code, @NotBlank String message) {
         this.code = code;
         this.message = message;
     }

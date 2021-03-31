@@ -1,15 +1,13 @@
 package fr.uge.jee.reddit.topic.comment;
 
-import fr.uge.jee.reddit.auth.AuthErrorResponse;
 import fr.uge.jee.reddit.auth.AuthService;
 import fr.uge.jee.reddit.topic.post.ErrorResponse;
-import fr.uge.jee.reddit.topic.post.Post;
 import fr.uge.jee.reddit.topic.post.PostFactory;
 import fr.uge.jee.reddit.topic.post.PostService;
-import fr.uge.jee.reddit.topic.vote.Vote;
 import fr.uge.jee.reddit.topic.vote.VoteService;
 import fr.uge.jee.reddit.user.User;
 import fr.uge.jee.reddit.user.UserService;
+import fr.uge.jee.reddit.utils.RestErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,7 +62,7 @@ public class CommentController {
         else {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body(new AuthErrorResponse("auth/unauthorized","user not connected"));
+                    .body(new RestErrorResponse("auth/unauthorized","user not connected"));
         }
     }
 
